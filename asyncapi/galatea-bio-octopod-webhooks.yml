@@ -1,0 +1,132 @@
+generated: '2026-08-16'
+method: searched
+source: https://docs.galatea.bio/#recipe-handling-webhooks-deliveries
+spec_type: Webhooks
+asyncapi_published: false
+note: >-
+  Galatea Bio publishes no AsyncAPI document. It does publish a real, documented webhook surface for
+  the Octopod Ancestry API, with a named signature header, an HMAC verification recipe, an
+  administrable subscription resource in the REST API, and a test-delivery endpoint. This artifact
+  captures that webhook catalog verbatim from the docs and the Swagger document. Nothing here is
+  invented - the two event types are an enum in the published spec.
+surface:
+  api: Octopod Ancestry API
+  spec: openapi/galatea-bio-octopod-openapi.yml
+  docs: https://docs.galatea.bio/#recipe-handling-webhooks-deliveries
+  delivery: HTTP POST from Galatea Bio to a customer-hosted endpoint
+  configured_by: Organization admins, via the console Integrations -> Webhooks tab or the REST API
+  expected_response: empty body with HTTP status code 200
+  senders:
+  - environment: production
+    sender_host: api.galatea.bio
+  - environment: sandbox
+    sender_host: api.sandbox.galatea.bio
+security:
+  scheme: HMAC-SHA256, base64 encoded
+  header: X-Octopod-Signature
+  signed_value: sender_host concatenated with the raw request body
+  secret: per-organization webhooks secret
+  secret_location: console Integrations -> Webhooks tab
+  secret_rotation_operation: organizations_generate-webhooks-secret_create
+  secret_rotation_path: POST /organizations/{organization_id}/generate-webhooks-secret
+  verification_recipe: https://docs.galatea.bio/#recipe-handling-webhooks-deliveries
+  on_missing_signature: reference handler returns HTTP 422
+events:
+- name: source_file_validation_completed
+  title: Source file validation completed
+  description: >-
+    Sent once validation of an uploaded source file completes, carrying the validation result.
+  payload:
+    source_file_id:
+      type: string
+      format: uuid
+      description: Identifier of the uploaded source file.
+    new_status:
+      type: string
+      description: Validation outcome for the source file.
+      example: VALID
+    source_file_name:
+      type: string
+      description: Stored file name.
+  example:
+    source_file_id: 7e53320c-c631-45ec-bad6-c88bb9d30960
+    new_status: VALID
+    source_file_name: d101979c-348c-44cd-8279-e9207b5a67a7.vcf.gz
+  test_payload:
+    new_status: VALID
+    source_file_id: 11111111-1111-1111-1111-111111111111
+    source_file_name: test_message_source_file_validated.vcf.gz
+- name: order_moved_to_completed_state
+  title: Order moved to completed state
+  description: >-
+    Sent once an execution order reaches a final state - Completed or Failed.
+  payload:
+    order_id:
+      type: string
+      format: uuid
+      description: Identifier of the execution order.
+    new_status:
+      type: string
+      description: Terminal order status.
+      example: COMPLETED
+    source_file_id:
+      type: string
+      format: uuid
+      description: Source file the order ran against.
+    source_file_name:
+      type: string
+      description: Stored file name.
+  example:
+    order_id: c1ea8279-25c2-4a36-9ea6-41e54239f17b
+    new_status: COMPLETED
+    source_file_id: 7e53320c-c631-45ec-bad6-c88bb9d30960
+    source_file_name: d101979c-348c-44cd-8279-e9207b5a67a7.vcf.gz
+  test_payload:
+    order_id: '22222222-2222-2222-2222-222222222222'
+    new_status: COMPLETED
+    source_file_id: '33333333-3333-3333-3333-333333333333'
+    source_file_name: test_message_order_completed.vcf.gz
+management_api:
+  note: >-
+    Webhook subscriptions are first-class REST resources in the same API, so an agent can enumerate,
+    configure and test deliveries programmatically.
+  operations:
+  - operation_id: notification_webhook-actions_list
+    path: GET /notification/webhook-actions
+    description: List the webhook actions the platform supports (name/value pairs).
+  - operation_id: organizations_webhooks-info_list
+    path: GET /organizations/{organization_id}/webhooks-info
+    description: >-
+      Read the organization's webhook subscriptions - webhook_action, remote_endpoint,
+      max_retries_count, save_error_in_notifications, created_at.
+  - operation_id: organizations_webhooks-info_create
+    path: POST /organizations/{organization_id}/webhooks-info
+    description: Create or edit the organization's webhook subscriptions.
+  - operation_id: organizations_webhooks_test_create
+    path: POST /organizations/{organization_id}/webhooks/{webhook_id}/test
+    description: >-
+      Send a test delivery containing the published fake payloads, so an endpoint can be verified
+      before real traffic.
+  - operation_id: organizations_generate-webhooks-secret_create
+    path: POST /organizations/{organization_id}/generate-webhooks-secret
+    description: Mint or rotate the organization's webhook signing secret.
+  - operation_id: notification_list
+    path: GET /notification
+    description: Read in-platform notifications, including saved webhook delivery errors.
+  - operation_id: notification_watch_update
+    path: PUT /notification/watch
+    description: Mark notifications as watched.
+subscription_fields:
+  webhook_action:
+    enum:
+    - order_moved_to_completed_state
+    - source_file_validation_completed
+    source: openapi/galatea-bio-octopod-openapi.yml
+  remote_endpoint: Customer HTTPS endpoint that receives the POST.
+  max_retries_count: Per-subscription retry budget.
+  save_error_in_notifications: Whether failed deliveries are recorded as in-platform notifications.
+other_inbound_webhooks:
+  note: >-
+    The spec also exposes POST /credit/quickbooks_webhook (credit_quickbooks_webhook_create), an
+    inbound receiver for Intuit QuickBooks billing events. It is a webhook Galatea Bio consumes, not
+    one it emits to customers, so it is recorded here but is not part of the customer event catalog.

@@ -1,0 +1,156 @@
+generated: '2026-08-16'
+method: searched
+source: openapi/galatea-bio-octopod-openapi.yml
+docs: https://docs.galatea.bio/
+note: >-
+  Cross-cutting request/response semantics for the Octopod Ancestry API, derived from the published
+  Swagger 2.0 document and confirmed against the GalateaBio Ancestry API documentation and the
+  first-party GalateaBio/octopod-cli client library.
+api:
+  name: Octopod Ancestry API
+  base_url: https://api.galatea.bio/api/v1
+  spec: openapi/galatea-bio-octopod-openapi.yml
+  spec_format: Swagger 2.0 (OpenAPI 2.0)
+  media_type: application/json
+  consumes: [application/json]
+  produces: [application/json]
+authentication:
+  style: bearer token in Authorization header
+  header: 'Authorization: Bearer <access_token>'
+  scheme_name: Bearer
+  applied: globally (spec declares a top-level security requirement)
+  see: authentication/galatea-bio-authentication.yml
+idempotency:
+  supported: false
+  note: >-
+    No idempotency key header, parameter, or retry-safety contract is documented in the Swagger
+    document or in the GalateaBio Ancestry API documentation. Order submission (POST /exec/orders)
+    is not declared idempotent. No Idempotency pointer is emitted for this provider.
+pagination:
+  style: page-number
+  request_params:
+  - name: page
+    in: query
+    type: integer
+    description: A page number within the paginated result set.
+  - name: page_size
+    in: query
+    type: integer
+    description: Number of results to return per page.
+  response_fields:
+  - name: count
+    description: Total number of matching records.
+    required: true
+  - name: next
+    description: Absolute URI of the next page, or null.
+  - name: previous
+    description: Absolute URI of the previous page, or null.
+  - name: results
+    description: Array of records for this page.
+    required: true
+  client_default_page_size: 10
+  client_default_page: 1
+  client_note: >-
+    The first-party octopod-cli hardcodes page_size=10 and defaults page=1 in
+    _BaseApi._add_pagination_query_params.
+  applies_to_paths:
+  - /data/files
+  - /exec/orders
+  - /exec/tags
+  - /credit/balance
+  - /credit/exchange
+  - /credit/ledger
+  - /users
+  - /organizations
+  - /data/results/{exec_order_id}/pdf_report
+filtering:
+  style: query parameters per collection, no generic filter grammar
+  common_params:
+  - name: min_date
+    format: YYYY-MM-DD
+    description: Lower bound of a date range.
+  - name: max_date
+    format: YYYY-MM-DD
+    description: Upper bound of a date range.
+  - name: filter
+    description: Free-text match on order id, source file id, or source file name (/exec/orders).
+  - name: tags_ids
+    description: Array of tag UUIDs.
+  - name: status
+    description: Enumerated order status.
+  - name: status_group
+    description: Coarse status bucket - initializing, running, completed, failed.
+  - name: type
+    description: Source file type - GNT, WGS, EXTERNAL.
+identifiers:
+  format: UUID version 4
+  note: >-
+    Every resource identifier in the API is a UUID4 - source files, orders, tags, users,
+    organizations, models, SFTP users, SSH keys and PDF report requests. The octopod-cli validates
+    the UUID format client-side before making a call and raises "Wrong uuid format" on a mismatch.
+  path_params: [source_file_id, order_id, exec_order_id, tag_id, user_id, organization_id, sftp_user_id, ssh_key_id, pdf_request_id, named_model_id]
+error_envelope:
+  shape: flat JSON object with a single detail string
+  example: '{"detail": "Authentication credentials were not provided."}'
+  field: detail
+  rfc9457: false
+  content_type: application/json
+  note: >-
+    Django REST Framework style. Not RFC 9457 problem+json - no type, title, status or instance
+    members. The client library reads the detail field and raises OctopodApiException with the
+    message and status code.
+  see: errors/galatea-bio-problem-types.yml
+versioning:
+  scheme: uri-path
+  current: v1
+  path_prefix: /api/v1
+  documented_policy: false
+  see: lifecycle/galatea-bio-lifecycle.yml
+rate_limiting:
+  documented: false
+  headers_observed: []
+  note: >-
+    No published rate limits and no RateLimit-* / X-RateLimit-* / Retry-After headers documented or
+    observed on unauthenticated responses.
+  see: rate-limits/galatea-bio-rate-limits.yml
+request_tracing:
+  request_id_header: null
+  note: No request-id or correlation-id header is documented.
+webhooks:
+  supported: true
+  signature_header: X-Octopod-Signature
+  algorithm: HMAC-SHA256 over (sender_host + raw body), base64 encoded
+  expected_response: HTTP 200 with an empty body
+  retries: configurable per subscription via max_retries_count
+  see: asyncapi/galatea-bio-octopod-webhooks.yml
+file_transfer:
+  api_upload:
+    path: POST /data/files/upload
+    encoding: multipart/form-data
+    size_limit: 50 MB
+    note: Documented limit; larger files must use SFTP.
+  sftp_upload:
+    transport: SFTP with SSH key authentication
+    size_limit: none documented
+    note: Documented as the preferred path for any file size.
+  downloads:
+    filename_source: Content-Disposition header, filename="..." parameter
+    note: >-
+      Result and source-file downloads return a binary body; the client parses the filename out of
+      the Content-Disposition response header.
+  filename_constraint: >-
+    Documented rule - file names may contain only letters, digits, spaces and the -+_. symbols.
+long_running_operations:
+  style: submit-then-poll, with optional webhook push
+  note: >-
+    POST /exec/orders returns immediately with an order object; the caller either polls
+    GET /exec/orders with a filter or subscribes to the order_moved_to_completed_state webhook.
+    Terminal states are Completed and Failed.
+cross_links:
+  authentication: authentication/galatea-bio-authentication.yml
+  errors: errors/galatea-bio-problem-types.yml
+  lifecycle: lifecycle/galatea-bio-lifecycle.yml
+  rate_limits: rate-limits/galatea-bio-rate-limits.yml
+  data_model: data-model/galatea-bio-data-model.yml
+  webhooks: asyncapi/galatea-bio-octopod-webhooks.yml
+  sandbox: sandbox/galatea-bio-sandbox.yml

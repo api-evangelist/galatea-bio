@@ -1,0 +1,26 @@
+generated: '2026-08-16'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: galatea.bio
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Nov 10 10:11:25 2026 GMT
+  hsts: false
+- host: docs.galatea.bio
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 25 06:55:40 2026 GMT
+  hsts: false
+- host: api.galatea.bio
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Nov  6 11:00:23 2026 GMT
+  hsts: null
+domains:
+- domain: galatea.bio
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: quarantine

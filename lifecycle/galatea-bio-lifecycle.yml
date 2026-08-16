@@ -1,0 +1,81 @@
+generated: '2026-08-16'
+method: derived
+source: openapi/galatea-bio-octopod-openapi.yml
+docs: https://docs.galatea.bio/
+note: >-
+  Derived from the published Octopod API Swagger document and the GalateaBio Ancestry API
+  documentation. Galatea Bio publishes no versioning policy, no deprecation policy, no SLA and no
+  status page, so no StatusPage or Deprecation pointer is emitted - those checks would otherwise be
+  credited for surfaces that do not exist.
+versioning:
+  scheme: uri-path
+  current: v1
+  path_prefix: /api/v1
+  spec_info_version: v1
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    The single version marker is the /api/v1 path segment. No second version is served, no version
+    negotiation header is documented, and no RFC 8594 Sunset or Deprecation response header is
+    declared anywhere in the spec.
+deprecation:
+  policy_url: null
+  policy_published: false
+  deprecated_operations: []
+  note: >-
+    No operation in the spec carries deprecated: true. Deprecation exists at the ANALYSIS MODEL
+    layer instead of the API layer - models can be marked deprecated and filtered out.
+  model_level_deprecation:
+    field: deprecated
+    schema_location: organization model objects
+    filter_parameter: hide_deprecated
+    filter_default: true
+    operation_id: organizations_models_list
+    path: GET /organizations/{organization_id}/models
+    description: >-
+      Callers can enumerate an organization's models and exclude deprecated ones. This is the only
+      deprecation signal the platform exposes, and it governs which analysis models an order may be
+      submitted against, not which endpoints remain callable.
+  model_history:
+    operation_id: exec_named_model_history_list
+    path: GET /exec/named_model/{named_model_id}/history
+    description: >-
+      Named models carry a version history, so the pinned artifact behind an order is traceable over
+      time even though the API surface itself is unversioned beyond v1.
+sla:
+  url: null
+  uptime_target: null
+  published: false
+status_page:
+  url: null
+  published: false
+  note: >-
+    No status.galatea.bio or third-party status page was found. The API does expose internal health
+    endpoints - GET /internal/health-check (internal_health-check_list) and GET /internal/status
+    (internal_status_list) - but these are authenticated operational endpoints inside the product,
+    not a public status page, and they do not satisfy a status-page check.
+changelog:
+  url: null
+  published: false
+  note: >-
+    No dated changelog, release notes page, or API version history is published for the Octopod
+    Ancestry API. The docs site was last modified 2025-08-01 and the marketing site 2026-07-28
+    (Last-Modified headers observed 2026-08-16). No changelog/ artifact is written.
+maturity_signals:
+  spec_served_live: true
+  spec_url: https://api.galatea.bio/swagger/?format=openapi
+  sandbox_environment: true
+  first_party_client: true
+  client_last_commit: '2025-07-30'
+  client_release_tags: 0
+  note: >-
+    The spec is generated live by drf-yasg from the running Django application, so it tracks the
+    deployed code rather than a hand-maintained file - the strongest currency signal available here.
+    Against that, the first-party client library has had no commit since 2025-07-30 and has never
+    been tagged or released.
+evidence:
+- {url: 'https://api.galatea.bio/swagger/?format=openapi', http_status: 200, fetched: '2026-08-16'}
+- {url: 'https://docs.galatea.bio/', http_status: 200, fetched: '2026-08-16'}
+- {url: 'https://api.galatea.bio/api/v1/users/me', http_status: 401, fetched: '2026-08-16'}

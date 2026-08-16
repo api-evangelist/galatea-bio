@@ -1,23 +1,148 @@
 aid: galatea-bio
 name: Galatea Bio
-description: 'Galatea Bio is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Galatea Bio is a Miami Lakes, Florida genomics company that operates a CLIA-CMS certified,
+  CAP-accredited high-complexity clinical laboratory alongside the Biobank of the Americas, working to
+  close the ancestry gap in genomic medicine by sequencing populations under-represented in existing
+  reference panels. Its developer surface is the Octopod Ancestry API, a REST API at
+  https://api.galatea.bio/api/v1 that lets clinical and research customers upload genomic source files
+  (VCF) over HTTPS or SFTP, submit execution orders against named analysis models including the
+  StrataRisk polygenic risk score, organize work with tags, receive HMAC-signed webhook deliveries when
+  a file validates or an order completes, and download ancestry, PRS, JSON and PDF report results. The
+  same API also exposes organization administration, SFTP user and SSH key management, credit/tariff
+  accounting, dashboards and statistics.
+image: https://galatea.bio/favicon.png
 url: https://raw.githubusercontent.com/api-evangelist/galatea-bio/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-16'
 modified: '2026-08-16'
 tags:
-- Company
-apis: []
+- genomics
+- bioinformatics
+- ancestry
+- precision-medicine
+- polygenic-risk-score
+- clinical-laboratory
+- genetic-testing
+- biobank
+- life-sciences
+- health
+- sequencing
+apis:
+- name: Octopod Ancestry API
+  description: >-
+    REST API (Swagger 2.0, 99 operations across 79 paths) for the Galatea Bio Octopod platform. Covers
+    JWT authentication, source-file upload/validation, execution orders against named analysis models,
+    tag management, result and PDF report retrieval, organization/SFTP administration, webhook
+    configuration, credit accounting and dashboards. Bearer-token auth; page/page_size pagination.
+  humanURL: https://docs.galatea.bio/
+  baseURL: https://api.galatea.bio/api/v1
+  tags:
+  - genomics
+  - ancestry
+  - polygenic-risk-score
+  - bioinformatics
+  - genetic-testing
+  properties:
+  - type: OpenAPI
+    url: openapi/galatea-bio-octopod-openapi.yml
+  - type: Documentation
+    url: https://docs.galatea.bio/
+  - type: APIReference
+    url: https://docs.galatea.bio/#api-reference-contents
+  - type: Swagger
+    url: https://api.galatea.bio/swagger/
+  - type: Authentication
+    url: authentication/galatea-bio-authentication.yml
+  - type: Conventions
+    url: conventions/galatea-bio-conventions.yml
+  - type: ErrorCatalog
+    url: errors/galatea-bio-problem-types.yml
+  - type: DataModel
+    url: data-model/galatea-bio-data-model.yml
+  - type: Overlay
+    url: overlays/galatea-bio-octopod-overlay.yaml
+  - type: Webhooks
+    url: asyncapi/galatea-bio-octopod-webhooks.yml
+  - type: Sandbox
+    url: sandbox/galatea-bio-sandbox.yml
+common:
+- type: AgenticAccess
+  url: agentic-access/galatea-bio-agentic-access.yml
+- type: Website
+  url: https://galatea.bio/
+- type: DeveloperPortal
+  url: https://docs.galatea.bio/
+- type: Documentation
+  url: https://docs.galatea.bio/
+- type: APIReference
+  url: https://docs.galatea.bio/#api-reference-contents
+- type: GettingStarted
+  url: https://docs.galatea.bio/#recipes-contents
+- type: Login
+  url: https://app.galatea.bio/
+- type: GitHubOrganization
+  url: https://github.com/GalateaBio
+- type: Compliance
+  url: https://galatea.bio/life-sciences
+- type: Authentication
+  url: authentication/galatea-bio-authentication.yml
+- type: Conventions
+  url: conventions/galatea-bio-conventions.yml
+- type: ErrorCatalog
+  url: errors/galatea-bio-problem-types.yml
+- type: DataModel
+  url: data-model/galatea-bio-data-model.yml
+- type: Lifecycle
+  url: lifecycle/galatea-bio-lifecycle.yml
+- type: Conformance
+  url: conformance/galatea-bio-conformance.yml
+- type: Webhooks
+  url: asyncapi/galatea-bio-octopod-webhooks.yml
+- type: Sandbox
+  url: sandbox/galatea-bio-sandbox.yml
+- type: Packages
+  url: packages/galatea-bio-packages.yml
+- type: SDKs
+  url: packages/galatea-bio-packages.yml
+- type: CLI
+  url: cli/galatea-bio-cli.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/galatea-bio-llms.txt
+- type: Overlay
+  url: overlays/galatea-bio-octopod-overlay.yaml
+- type: RateLimits
+  url: rate-limits/galatea-bio-rate-limits.yml
+- type: Plans
+  url: plans/galatea-bio-plans-pricing.yml
+- type: DomainSecurity
+  url: security/galatea-bio-domain-security.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
-common:
-- type: Website
-  url: https://www.nasdaqprivatemarket.com/
+x-enrichment:
+  date: '2026-08-16'
+  status: enriched
+  artifacts_added: 26
+  pass: local-v1
+x-coverage:
+  state: covered
+  reason: contract-published
+  detail: >-
+    A live Swagger 2.0 document for the Octopod Ancestry API (99 operations, 79 paths) is served at
+    https://api.galatea.bio/swagger/?format=openapi, with full public documentation at
+    docs.galatea.bio and a first-party Python client at github.com/GalateaBio/octopod-cli.
+  evidence:
+  - url: https://api.galatea.bio/swagger/?format=openapi
+    status: 200
+  - url: https://docs.galatea.bio/
+    status: 200
+  - url: https://api.sandbox.galatea.bio/swagger/?format=openapi
+    status: 200
+  checked: '2026-08-16'

@@ -1,0 +1,56 @@
+generated: '2026-08-16'
+method: searched
+source: https://docs.galatea.bio/
+limit_count: 0
+documented: false
+note: >-
+  Galatea Bio publishes no rate limits for the Octopod Ancestry API. The GalateaBio Ancestry API
+  documentation has no rate-limit section; its Errors table lists 400, 401, 403, 404, 405, 406, 422,
+  500 and 503 and does not include 429. No 429 response is declared on any of the 99 operations in
+  the published Swagger document, and no RateLimit-*, X-RateLimit-* or Retry-After header appears in
+  the spec or the docs. An honest zero.
+limits: []
+response_headers:
+  observed: []
+  documented: []
+  note: >-
+    Headers were inspected on a live unauthenticated request to
+    https://api.galatea.bio/api/v1/users/me (HTTP 401). The response carried only Django/Cloudflare
+    security headers - x-frame-options, x-content-type-options, referrer-policy,
+    cross-origin-opener-policy, vary - and no rate-limit signalling of any kind.
+exhaustion_status: null
+retry_guidance:
+  published: false
+  note: >-
+    The docs advise retrying later on 500 and 503, but give no backoff policy, no retry budget and
+    no rate ceiling.
+adjacent_quota_controls:
+  note: >-
+    Throughput is governed commercially rather than by request rate. Two real constraints are
+    published and are the closest thing to a documented limit.
+  constraints:
+  - kind: request-body size
+    value: 50 MB
+    scope: POST /data/files/upload
+    source: https://docs.galatea.bio/#recipe-upload-file-get-status
+    note: Files above this must be delivered over SFTP; the docs call SFTP the preferred path.
+  - kind: consumption quota
+    value: per-organization credit balance
+    scope: order submission
+    source: openapi/galatea-bio-octopod-openapi.yml
+    note: >-
+      Orders draw down a credit balance (see plans/galatea-bio-plans-pricing.yml). Exhausting
+      credits, not exceeding a request rate, is the practical limit on this API.
+  - kind: pagination ceiling
+    value: page_size query parameter, client default 10
+    scope: all collection endpoints
+    note: No maximum page_size is documented.
+  - kind: webhook retries
+    value: max_retries_count, configured per subscription
+    scope: outbound webhook delivery
+    source: https://docs.galatea.bio/#recipe-handling-webhooks-deliveries
+evidence:
+- {url: 'https://api.galatea.bio/api/v1/users/me', http_status: 401, note: 'no rate-limit headers present on the live response'}
+- {url: 'https://api.galatea.bio/swagger/?format=openapi', http_status: 200, note: 'no 429 response declared on any of 99 operations'}
+- {url: 'https://docs.galatea.bio/#errors-contents', http_status: 200, note: 'error reference lists no 429 and no rate-limit section'}
+checked: '2026-08-16'

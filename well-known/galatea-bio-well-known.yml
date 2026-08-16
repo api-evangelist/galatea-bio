@@ -1,0 +1,78 @@
+generated: '2026-08-16'
+method: probed
+source: live HTTPS probes on 2026-08-16
+result: no-documents-found
+note: >-
+  Every /.well-known/ path was probed on all four Galatea Bio hosts. None returned a document. The
+  marketing, console and docs hosts sit behind a Cloudflare rule that answers 403 with an HTML
+  challenge page for the entire /.well-known/ namespace, and the API host does the same. No
+  security.txt, OIDC discovery, OAuth metadata, api-catalog, ai-plugin or agent card is served.
+  NO WellKnown or SecurityTxt pointer is emitted in apis.yml - this file records a verified absence,
+  which is data, not a presence.
+hosts:
+- host: https://galatea.bio
+  role: website
+  documents:
+  - {path: /.well-known/security.txt, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/openid-configuration, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/oauth-authorization-server, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/oauth-protected-resource, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/api-catalog, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/ai-plugin.json, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/agent-card.json, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/agent.json, status: 403, result: cloudflare-html-challenge}
+  - {path: /llms.txt, status: 200, result: spa-shell-not-a-document}
+  - {path: /security.txt, status: 200, result: spa-shell-not-a-document}
+- host: https://api.galatea.bio
+  role: api
+  documents:
+  - {path: /.well-known/security.txt, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/openid-configuration, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/oauth-authorization-server, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/oauth-protected-resource, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/api-catalog, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/ai-plugin.json, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/agent-card.json, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/agent.json, status: 403, result: cloudflare-html-challenge}
+  - {path: /llms.txt, status: 404, result: absent}
+  - {path: /security.txt, status: 404, result: absent}
+- host: https://app.galatea.bio
+  role: console
+  documents:
+  - {path: /.well-known/security.txt, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/openid-configuration, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/oauth-authorization-server, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/oauth-protected-resource, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/api-catalog, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/ai-plugin.json, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/agent-card.json, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/agent.json, status: 403, result: cloudflare-html-challenge}
+  - {path: /llms.txt, status: 200, result: spa-shell-not-a-document}
+- host: https://docs.galatea.bio
+  role: documentation
+  documents:
+  - {path: /.well-known/security.txt, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/openid-configuration, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/oauth-authorization-server, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/oauth-protected-resource, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/api-catalog, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/ai-plugin.json, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/agent-card.json, status: 403, result: cloudflare-html-challenge}
+  - {path: /.well-known/agent.json, status: 403, result: cloudflare-html-challenge}
+  - {path: /llms.txt, status: 200, result: spa-shell-not-a-document}
+summary:
+  paths_probed: 38
+  documents_found: 0
+  security_txt: false
+  openid_configuration: false
+  oauth_authorization_server: false
+  api_catalog: false
+  ai_plugin: false
+  agent_card: false
+  pointers_emitted: none
+soft_200_warning: >-
+  galatea.bio, app.galatea.bio and docs.galatea.bio return HTTP 200 with an HTML page for arbitrary
+  paths including /llms.txt and /security.txt. These are single-page-app catch-alls, not documents.
+  They are recorded as misses. The same catch-all makes path-existence checks on the marketing site
+  unreliable, which is why no TermsOfService, PrivacyPolicy or Pricing pointer was added from a bare
+  status code.

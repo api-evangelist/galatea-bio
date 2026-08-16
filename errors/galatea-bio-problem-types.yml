@@ -1,0 +1,121 @@
+generated: '2026-08-16'
+method: searched
+source: openapi/galatea-bio-octopod-openapi.yml
+docs: https://docs.galatea.bio/#errors-contents
+format: detail-envelope
+rfc9457: false
+note: >-
+  Derived from the 4xx responses declared across all 99 operations in the published Octopod API
+  Swagger 2.0 document, then enriched from the Errors table in the GalateaBio Ancestry API
+  documentation. The API does not use application/problem+json; every error is a flat JSON object
+  with a single "detail" string, the Django REST Framework default.
+envelope:
+  content_type: application/json
+  shape:
+    detail: string
+  example: '{"detail": "Authentication credentials were not provided."}'
+  observed:
+    url: https://api.galatea.bio/api/v1/users/me
+    http_status: 401
+    body: '{"detail": "Authentication credentials were not provided."}'
+    fetched: '2026-08-16'
+problems:
+- status: 400
+  title: Bad Request
+  meaning: Your request is invalid.
+  detail_examples:
+  - Bad request
+  spec_occurrences: 27
+  remediation: >-
+    Check required body fields and query parameter types. Order submission requires a valid
+    source_file_id UUID and a model_name the organization is entitled to.
+- status: 401
+  title: Unauthorized
+  meaning: Your API key is wrong.
+  detail_examples:
+  - Unauthorized request
+  - Authentication credentials were not provided.
+  spec_occurrences: 85
+  remediation: >-
+    Send Authorization: Bearer <access_token>. Password-derived access tokens are short-lived -
+    refresh with POST /users/refresh (users_refresh_create) before retrying.
+- status: 403
+  title: Forbidden
+  meaning: The information requested is hidden for administrators only.
+  detail_examples:
+  - Forbidden
+  spec_occurrences: 79
+  remediation: >-
+    The token is valid but the user's role does not permit the operation. Organization, credit,
+    SFTP-user and model-management endpoints are admin-scoped.
+- status: 404
+  title: Not Found
+  meaning: The specified information could not be found.
+  detail_examples:
+  - Not found data
+  spec_occurrences: 11
+  remediation: Confirm the UUID exists and belongs to the caller's organization.
+- status: 405
+  title: Method Not Allowed
+  meaning: You tried to access an information with an invalid method.
+  detail_examples:
+  - 'Method "GET" not allowed.'
+  spec_occurrences: 0
+  documented_in: https://docs.galatea.bio/#errors-contents
+  observed:
+    url: https://api.galatea.bio/api/v1/users/auth
+    http_status: 405
+    body: '{"detail": "Method \"GET\" not allowed."}'
+    fetched: '2026-08-16'
+  remediation: Check the HTTP verb against the API reference.
+- status: 406
+  title: Not Acceptable
+  meaning: You requested a format that isn't json.
+  detail_examples:
+  - Not acceptable request
+  - Not acceptable
+  - Incorrect ID
+  spec_occurrences: 26
+  remediation: >-
+    Send Accept: application/json. Also returned for malformed identifiers - "Incorrect ID" is
+    surfaced under this status rather than 400.
+- status: 422
+  title: Unprocessable Entity
+  meaning: Your request contains incorrect data.
+  detail_examples:
+  - Request cannot be processed
+  spec_occurrences: 5
+  remediation: >-
+    The request parsed but failed a business rule - for example an order against a model the
+    organization is not entitled to, or a source file that has not passed validation.
+- status: 500
+  title: Internal Server Error
+  meaning: We had a problem with our server. Try again later.
+  spec_occurrences: 0
+  documented_in: https://docs.galatea.bio/#errors-contents
+  remediation: Retry with backoff.
+- status: 503
+  title: Service Unavailable
+  meaning: We're temporarily offline for maintenance. Please try again later.
+  spec_occurrences: 0
+  documented_in: https://docs.galatea.bio/#errors-contents
+  remediation: Retry with backoff.
+domain_failure_states:
+  note: >-
+    Beyond HTTP errors, the order lifecycle carries its own terminal failure states, returned in the
+    status field of an order object rather than as an HTTP error.
+  order_statuses:
+  - Failed
+  - Canceled
+  - Reports failed
+  - QC failed
+  result_type: EXEC_ERRORS
+  result_type_note: >-
+    Execution errors for a failed order are retrievable as a downloadable result of type
+    EXEC_ERRORS via GET /data/results/{exec_order_id}/download.
+client_handling:
+  library: https://github.com/GalateaBio/octopod-cli
+  exception: OctopodApiException
+  note: >-
+    The first-party client treats any status outside 200-299 as an error, reads the "detail" member
+    when present, and otherwise raises with the raw response text plus the status code.

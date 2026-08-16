@@ -1,0 +1,93 @@
+generated: '2026-08-16'
+method: searched
+source: https://github.com/GalateaBio/octopod-cli
+note: >-
+  Galatea Bio ships one first-party client library: the Octopod wrapper and CLI, published as source
+  on its own GitHub organization under MIT. It is NOT available on PyPI - the docs and README say
+  "pip install octopod", but pypi.org/project/octopod is an unrelated multi-task classification
+  library published by ShopRunner. Registry checks below record that collision honestly rather than
+  crediting Galatea Bio with a published package it does not own.
+packages:
+- language: python
+  registry: github
+  name: octopod
+  distribution_name: octopod
+  repository: https://github.com/GalateaBio/octopod-cli
+  url: https://github.com/GalateaBio/octopod-cli
+  install: pip install "octopod @ git+https://github.com/GalateaBio/octopod-cli"
+  documented_install: pip install octopod
+  official: true
+  license: MIT
+  version: 0.0.1
+  version_source: setup.py in the default branch (no tags, no GitHub releases)
+  published: null
+  last_commit: '2025-07-30'
+  first_commit: '2025-02-10'
+  provides:
+  - octopod_wrapper (Python client for the Octopod API)
+  - octopod_cli / "octo" console script
+  covers:
+  - file upload via API and SFTP
+  - file deletion, search and sample-alias update
+  - organization info and available models
+  - order submission, cancellation and tag updates
+  - tag create/search/edit
+  - result and PDF report download
+  note: >-
+    version reads 0.0.1 from setup.py; the repository publishes no git tags and no GitHub releases,
+    so there is no dated release artifact to read. published is null because nothing was ever
+    published to a package registry - this is an honest gap, not an unchecked field. The most recent
+    commit to the default branch is 2025-07-30, roughly thirteen months before this probe.
+registry_checks:
+- registry: pypi
+  queried: https://pypi.org/pypi/octopod/json
+  http_status: 200
+  result: name-collision
+  owner: ShopRunner
+  owner_url: https://github.com/shoprunner/octopod
+  summary: General purpose multi-task classification library
+  latest_version: 3.2.0
+  latest_published: '2022-03-18'
+  finding: >-
+    The PyPI project named "octopod" is not Galatea Bio's. Following the documented
+    "pip install octopod" instruction installs an unrelated ShopRunner machine-learning library, not
+    the Octopod API client. This is a real, reproducible defect in the provider's own install
+    instructions and is worth reporting back to them.
+- registry: pypi
+  queried: https://pypi.org/pypi/octopod-cli/json
+  http_status: 404
+  result: absent
+- registry: npm
+  queried: https://registry.npmjs.org/galatea-bio
+  http_status: 404
+  result: absent
+- registry: npm
+  queried: https://registry.npmjs.org/@galateabio/sdk
+  http_status: 404
+  result: absent
+- registry: npm
+  queried: https://registry.npmjs.org/octopod-client
+  http_status: 404
+  result: absent
+not_found:
+  registries_with_no_first_party_package:
+  - npm
+  - pypi
+  - maven-central
+  - nuget
+  - rubygems
+  - packagist
+  - crates.io
+  - pkg.go.dev
+  note: >-
+    Python is the only language Galatea Bio ships a client for. The docs give raw curl and Python
+    requests examples for every endpoint, so callers in other languages work against the REST
+    surface directly.
+dependencies:
+  runtime:
+  - requests==2.32.3
+  - paramiko==3.5.1
+  note: Pinned exactly in requirements.txt; paramiko backs the SFTP upload path.
+see_also:
+  cli: cli/galatea-bio-cli.yml
+  openapi: openapi/galatea-bio-octopod-openapi.yml

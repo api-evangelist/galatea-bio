@@ -1,0 +1,41 @@
+generated: '2026-08-16'
+method: searched
+source: https://galatea.bio/
+plan_count: 0
+pricing_model: contact-sales
+self_serve_signup: false
+note: >-
+  Galatea Bio publishes no pricing page and no plan tiers. The marketing site is a single-page React
+  app whose bundle contains exactly three routes - /about-us, /investor-relations and /life-sciences
+  - plus the news, events and publications pages listed in its sitemap. There is no /pricing route,
+  and the site returns HTTP 200 with the app shell for any path, so a bare 200 on /pricing is a
+  soft-404 and was not treated as a hit. The GalateaBio Ancestry API documentation covers
+  authentication, endpoints and recipes but never mentions price, quota, or tier. Access to the
+  Octopod Ancestry API is provisioned per organization by Galatea Bio.
+plans: []
+internal_billing_surface:
+  note: >-
+    The API itself contains a complete credit-accounting subsystem, so pricing exists as a runtime
+    contract between Galatea Bio and each organization even though no rate card is public. These
+    endpoints are admin-scoped and expose no published rates.
+  entities:
+  - {name: credit balance, path: GET /credit/balance, operation_id: credit_balance_list}
+  - {name: credit ledger, path: GET /credit/ledger, operation_id: credit_ledger_list}
+  - {name: credit tariff, path: GET /credit/tariff, operation_id: credit_tariff_list, fields: [price, credit_service, org_id]}
+  - {name: credit service, path: GET /credit/service, operation_id: credit_service_list}
+  - {name: credit exchange rate, path: GET /credit/exchange, operation_id: credit_exchange_list, fields: [rate, currency_from]}
+  - {name: credit replenish, path: POST /credit/replenish, operation_id: credit_replenish_create}
+  - {name: credit write-off, path: POST /credit/write_off, operation_id: credit_write_off_create}
+  billing_integration:
+    vendor: Intuit QuickBooks
+    evidence:
+    - {path: GET /credit/quickbooks_auth, operation_id: credit_quickbooks_auth_list}
+    - {path: POST /credit/quickbooks_webhook, operation_id: credit_quickbooks_webhook_create}
+    - {field: quickbooks_customer_id}
+  unit_of_charge: credits, priced per credit service via tariff rows, multi-currency
+evidence:
+- {url: 'https://galatea.bio/sitemap.xml', http_status: 200, note: '46 URLs, none of them a pricing page'}
+- {url: 'https://galatea.bio/assets/index-7iMjTf0u.js', http_status: 200, note: 'SPA bundle declares only /about-us, /investor-relations, /life-sciences as routes'}
+- {url: 'https://galatea.bio/pricing', http_status: 200, note: 'soft-404 - returns the SPA shell, not a pricing page'}
+- {url: 'https://docs.galatea.bio/', http_status: 200, note: 'API documentation contains no pricing, quota or tier information'}
+checked: '2026-08-16'

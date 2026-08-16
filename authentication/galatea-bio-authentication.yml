@@ -1,0 +1,99 @@
+generated: '2026-08-16'
+method: searched
+source: openapi/galatea-bio-octopod-openapi.yml
+docs: https://docs.galatea.bio/#api-reference-auth-contents
+note: >-
+  Derived from the published Octopod API Swagger 2.0 document, then upgraded from the GalateaBio
+  Ancestry API documentation and the first-party octopod-cli client. The spec declares a single
+  security definition (apiKey named "Authorization" in header) which the docs and client confirm
+  carries a JWT bearer token in the form "Authorization: Bearer <token>".
+summary:
+  types:
+  - apiKey
+  - http-bearer
+  api_key_in:
+  - header
+  oauth2_flows: []
+  mfa: true
+  applied_globally: true
+schemes:
+- name: Bearer
+  type: apiKey
+  in: header
+  parameter: Authorization
+  format: 'JWT bearer token, sent as "Authorization: Bearer <access_token>"'
+  sources:
+  - openapi/galatea-bio-octopod-openapi.yml
+  applies_to: all operations (spec declares a global security requirement)
+credential_modes:
+- mode: organization API key
+  description: >-
+    A long-lived organization API key minted by an organization admin. Used directly as the bearer
+    token. The octopod-cli calls this api_mode=1.
+  issued_by: POST /organizations/{organization_id}/generate-api-key
+  operation_id: organizations_generate-api-key_create
+  docs: https://docs.galatea.bio/#recipe-authentication
+- mode: username and password login
+  description: >-
+    Email + password exchanged for a short-lived access token, a refresh token, and a websocket
+    access token. The docs explicitly warn the fetched access token has a short lifetime. The
+    octopod-cli calls this api_mode=2.
+  issued_by: POST /users/auth
+  operation_id: users_auth_create
+  request_fields: [email, password]
+  response_fields: [access, refresh, websocket_access]
+  docs: https://docs.galatea.bio/#api-reference-auth-login
+- mode: SFTP key-based
+  description: >-
+    Separate credential path for bulk file transfer. Organizations manage SFTP users and their SSH
+    public keys through the API; uploads then authenticate to the SFTP host with a private keyfile
+    rather than a bearer token.
+  issued_by: POST /organizations/{organization_id}/sftp_users/{sftp_user_id}/ssh_keys
+  operation_id: organizations_sftp_users_ssh_keys_create
+  docs: https://docs.galatea.bio/#recipe-upload-file-with-sftp-get-status
+token_lifecycle:
+- action: obtain
+  operation_id: users_auth_create
+  path: POST /users/auth
+- action: multi-factor confirmation
+  operation_id: users_confirm_create
+  path: POST /users/confirm
+  note: Requires mfa_session_id plus a numeric code; MFA is part of the published login flow.
+- action: request a new MFA code
+  operation_id: users_request-new-code_create
+  path: POST /users/request-new-code
+- action: refresh
+  operation_id: users_refresh_create
+  path: POST /users/refresh
+  note: Takes both the refresh token and the expired access token.
+- action: revoke
+  operation_id: users_logout_create
+  path: POST /users/logout
+  note: Requires the refresh token; returns HTTP 200 on successful logout.
+password_management:
+- operation_id: users_change-password_create
+  path: POST /users/change-password
+- operation_id: users_forgot-password_create
+  path: POST /users/forgot-password
+- operation_id: users_reset-password_create
+  path: POST /users/reset-password
+- operation_id: users_activate_create
+  path: POST /users/activate
+webhook_authentication:
+  scheme: HMAC-SHA256 signature, base64 encoded
+  header: X-Octopod-Signature
+  signed_payload: sender_host + raw request body
+  secret_issued_by: POST /organizations/{organization_id}/generate-webhooks-secret
+  docs: https://docs.galatea.bio/#recipe-handling-webhooks-deliveries
+  see: asyncapi/galatea-bio-octopod-webhooks.yml
+environments:
+- name: production
+  base_url: https://api.galatea.bio/api/v1
+  webhook_sender_host: api.galatea.bio
+- name: sandbox
+  base_url: https://api.sandbox.galatea.bio/api/v1
+  webhook_sender_host: api.sandbox.galatea.bio
+unauthenticated_response:
+  status: 401
+  body: '{"detail": "Authentication credentials were not provided."}'
+  observed: 'GET https://api.galatea.bio/api/v1/users/me on 2026-08-16'

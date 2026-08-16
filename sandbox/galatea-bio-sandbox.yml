@@ -1,0 +1,79 @@
+generated: '2026-08-16'
+method: searched
+source: https://docs.galatea.bio/#overview-contents
+note: >-
+  Galatea Bio publishes a named sandbox environment for the Octopod Ancestry API alongside
+  production, documented in the environment table on the docs overview and referenced again in the
+  webhook recipe. No test credentials, magic identifiers or fixture values are published - a sandbox
+  account is provisioned by Galatea Bio. Nothing below is invented.
+environments:
+- name: production
+  base_url: https://api.galatea.bio/api/v1
+  console: https://app.galatea.bio/
+  swagger_ui: https://api.galatea.bio/swagger/
+  webhook_sender_host: api.galatea.bio
+- name: sandbox
+  base_url: https://api.sandbox.galatea.bio/api/v1
+  swagger_ui: https://api.sandbox.galatea.bio/swagger/
+  webhook_sender_host: api.sandbox.galatea.bio
+  verified:
+    url: https://api.sandbox.galatea.bio/swagger/?format=openapi
+    http_status: 200
+    content_type: application/openapi+json
+    fetched: '2026-08-16'
+    note: >-
+      The sandbox host serves the same Octopod API Swagger document as production, so the sandbox is
+      a full parallel deployment rather than a docs-only mention.
+separation:
+  model: separate hostname per environment
+  key_prefixes: none published
+  mode_flag: >-
+    Objects in the API carry an is_sandbox boolean, so sandbox and production records are
+    distinguishable in payloads.
+  note: >-
+    There is no test-mode key prefix convention (no sk_test_/live_ style marker). The environment is
+    selected purely by base URL, which means a misconfigured api_base_url in the octopod-cli config
+    is the primary way a caller can cross environments by accident.
+credentials:
+  self_serve: false
+  published_test_credentials: none
+  note: >-
+    Sandbox access requires credentials issued by Galatea Bio. The docs show how to configure the
+    client against a base URL but publish no shared test account, API key, or demo organization.
+test_values:
+  published: false
+  note: >-
+    No test VCF files, magic sample identifiers, or synthetic genomes are published. Given the
+    product handles human genomic data this is an expected posture, not an omission.
+webhook_testing:
+  supported: true
+  operation_id: organizations_webhooks_test_create
+  path: POST /organizations/{organization_id}/webhooks/{webhook_id}/test
+  description: >-
+    Sends a delivery containing published fake payloads so an endpoint can be validated without
+    running a real order.
+  published_test_payloads:
+  - event: source_file_validation_completed
+    payload:
+      new_status: VALID
+      source_file_id: 11111111-1111-1111-1111-111111111111
+      source_file_name: test_message_source_file_validated.vcf.gz
+  - event: order_moved_to_completed_state
+    payload:
+      order_id: '22222222-2222-2222-2222-222222222222'
+      new_status: COMPLETED
+      source_file_id: '33333333-3333-3333-3333-333333333333'
+      source_file_name: test_message_order_completed.vcf.gz
+  source: https://docs.galatea.bio/#recipe-handling-webhooks-deliveries
+  see: asyncapi/galatea-bio-octopod-webhooks.yml
+interactive_console:
+  swagger_ui: https://api.galatea.bio/swagger/
+  generator: drf-yasg
+  title: Octopod API
+  note: >-
+    A live Swagger UI is served on the API host itself and renders the full 99-operation document.
+    Try-it-out calls require a bearer token.
+  verified:
+    url: https://api.galatea.bio/swagger/
+    http_status: 200
+    fetched: '2026-08-16'

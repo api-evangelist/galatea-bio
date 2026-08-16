@@ -1,0 +1,182 @@
+generated: '2026-08-16'
+method: searched
+source: https://github.com/GalateaBio/octopod-cli
+docs: https://docs.galatea.bio/#recipe-install-octopod-wrapper-and-client
+note: >-
+  First-party CLI published by Galatea Bio on its own GitHub organization under MIT, and referenced
+  from the GalateaBio Ancestry API documentation. Every command below is read verbatim from the
+  repository's README and its command modules.
+cli:
+  name: octo
+  package: octopod
+  entry_point: octo=cli:main
+  repository: https://github.com/GalateaBio/octopod-cli
+  license: MIT
+  language: python
+  python_version: '3.12'
+  version: 0.0.1
+install:
+- method: pip from git
+  command: pip install "octopod @ git+https://github.com/GalateaBio/octopod-cli"
+  note: The documented "pip install octopod" resolves to an unrelated PyPI project - see packages/galatea-bio-packages.yml.
+- method: local checkout
+  command: pip install octopod file://<path_to_repo>
+configuration:
+  storage: local config written by the CLI
+  modes:
+  - id: 1
+    name: api-key
+    required: [api_key, api_base_url]
+  - id: 2
+    name: username-password
+    required: [api_username, api_password, api_base_url]
+  options:
+  - api_mode
+  - api_key
+  - api_username
+  - api_password
+  - api_base_url
+  - sftp_host
+  - sftp_user
+  - sftp_keyfile
+  - download_folder
+  example: |
+    octo set-config \
+      --api_mode=1 \
+      --api_key="<api_key>" \
+      --api_base_url="https://api.galatea.bio"
+commands:
+- group: config
+  commands:
+  - name: set-config
+    description: Write API mode, credentials, base URL, SFTP settings and download folder.
+  - name: get-config
+    description: Print the current config options.
+  - name: clear-config
+    description: Clear stored config options.
+- group: files
+  commands:
+  - name: api-upload-file
+    description: Upload a source file through the API. Documented limit 50 MB.
+    flags: [--file_name]
+    api: POST /data/files/upload
+    operation_id: data_files_upload_create
+  - name: sftp-upload-file
+    description: Upload a source file over SFTP. Preferred for any file size.
+    flags: [--file_name]
+  - name: find-file
+    description: Look up a source file by id or name.
+    flags: [--file_id, --file_name]
+    api: GET /data/files
+    operation_id: data_files_list
+  - name: delete-file
+    description: Delete a source file by id.
+    api: DELETE /data/files/{source_file_id}
+    operation_id: data_files_delete
+  - name: update-file-sample-alias
+    description: Set a new sample alias on a source file.
+    api: PUT /data/files/{source_file_id}
+    operation_id: data_files_update
+  - name: download-file
+    description: Download a source file by id.
+    api: GET /data/files/{source_file_id}/download
+    operation_id: data_files_download_list
+- group: organization
+  commands:
+  - name: get-organization-info
+    description: Show the caller's organization, including its available_models list.
+    api: GET /users/me
+    operation_id: users_me_list
+  - name: get-organization-models
+    description: List an organization's models, optionally hiding deprecated ones.
+    api: GET /organizations/{organization_id}/models
+    operation_id: organizations_models_list
+- group: orders
+  commands:
+  - name: submit-order
+    description: Submit an execution order for a file against a named model.
+    flags: [--file_id, --model, --pdf_report_types]
+    api: POST /exec/orders
+    operation_id: exec_orders_create
+  - name: find-order
+    description: Find an order by order id or source file id.
+    flags: [--order_id_or_file_id]
+    api: GET /exec/orders
+    operation_id: exec_orders_list
+  - name: cancel-order
+    description: Cancel a running order.
+    api: POST /exec/cancel
+    operation_id: exec_cancel_create
+  - name: update-order-tags
+    description: Replace the tag set on an order.
+    api: PATCH /exec/orders/{order_id}
+    operation_id: exec_orders_partial_update
+- group: tags
+  commands:
+  - name: create-tag
+    api: POST /exec/tags
+    operation_id: exec_tags_create
+  - name: find-tag
+    api: GET /exec/tags/{tag_id}
+    operation_id: exec_tags_read
+  - name: list-tags
+    api: GET /exec/tags
+    operation_id: exec_tags_list
+  - name: update-tag
+    api: PUT /exec/tags/{tag_id}
+    operation_id: exec_tags_update
+- group: results
+  commands:
+  - name: download-result-file
+    description: Download an order result by result type.
+    flags: [--order_id, --result_type]
+    api: GET /data/results/{exec_order_id}/download
+    operation_id: data_results_download_list
+  - name: download-result-json
+    description: Download an order result as JSON.
+    api: GET /data/results/{exec_order_id}/json
+    operation_id: data_results_json_list
+  - name: list-result-pdf-reports
+    api: GET /data/results/{exec_order_id}/pdf_report
+    operation_id: data_results_pdf_report_list
+  - name: list-result-samples
+    api: GET /data/results/{exec_order_id}/samples
+    note: >-
+      Implemented in the wrapper against /data/results/{order_id}/samples. This path is not present
+      in the published Swagger document, so it is recorded as a client-library-only surface.
+key_flows:
+- name: upload and check status
+  docs: https://docs.galatea.bio/#recipe-upload-file-get-status
+- name: upload with SFTP and check status
+  docs: https://docs.galatea.bio/#recipe-upload-file-with-sftp-get-status
+- name: submit an ancestry data order
+  docs: https://docs.galatea.bio/#recipe-submit-execution-order-without-reports
+- name: submit an ancestry PDF order
+  docs: https://docs.galatea.bio/#recipe-submit-execution-order-with-ancestry-reports
+- name: submit a PRS PDF order
+  docs: https://docs.galatea.bio/#recipe-submit-execution-order-with-prs-reports
+- name: get order info and results
+  docs: https://docs.galatea.bio/#recipe-get-results-of-order
+- name: download PDF reports as a ZIP or single file
+  docs: https://docs.galatea.bio/#recipe-download-pdf-reports-of-order
+enumerations:
+  pdf_report_types:
+  - PRS_RUO_CARDIO
+  - PRS_RUO_CANCER
+  - PRS_CLINICAL_CARDIO
+  - PRS_CLINICAL_CANCER
+  result_types:
+  - SUMMARY_SUPERSET
+  - SUMMARY_CHROMS
+  - DETAILED_SUPERSET
+  - DETAILED_CHROMS
+  - WHOLE_RESULT
+  - CHROMS_SVG
+  - PDF_REPORT
+  - PRS_DATA
+  - PRS_TECH_DATA
+  - PRS_QC
+  - EXEC_ERRORS
+  - UNKNOWN
+see_also:
+  packages: packages/galatea-bio-packages.yml

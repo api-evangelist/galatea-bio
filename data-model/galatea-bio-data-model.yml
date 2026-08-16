@@ -1,0 +1,178 @@
+generated: '2026-08-16'
+method: derived
+source: openapi/galatea-bio-octopod-openapi.yml
+note: >-
+  Entity-relationship graph derived from the inline response and request schemas of the published
+  Octopod API Swagger document. The spec declares an empty definitions block - every schema is
+  inlined per operation - so entities below are reconstructed from repeated field shapes and from
+  the *_id reference fields that appear across payloads. Relationship confidence is stated per row.
+identifiers:
+  format: UUID v4
+  prefixes: none
+  note: >-
+    Galatea Bio uses bare UUIDs with no type prefix, so an identifier is not self-describing. An
+    agent must track which entity an id belongs to from context. /exec/orders accepts a single
+    "filter" parameter that matches an order id, a source file id, or a source file name
+    interchangeably, which is the API's own accommodation for that ambiguity.
+entities:
+- name: Organization
+  root: true
+  path: /organizations
+  description: >-
+    The tenant boundary. Owns users, source files, orders, credit balance, SFTP users, webhook
+    subscriptions and the set of analysis models it is entitled to run.
+  key_fields: [id, name, available_models, is_sandbox]
+  operations: [organizations_list, organizations_create, organizations_update]
+- name: User
+  path: /users
+  description: A member of an organization, with a role that gates admin-only endpoints.
+  key_fields: [id, email, first_name, last_name, role, org_id, created_at, deleted_at]
+  operations: [users_list, users_create, users_read, users_update, users_delete, users_me_list]
+- name: SourceFile
+  path: /data/files
+  description: >-
+    An uploaded genomic input file (VCF), delivered over HTTPS for files under 50 MB or over SFTP for
+    any size. Validated asynchronously; validation completion is a webhook event.
+  key_fields: [id, src_file_name, sample_alias, file_size_bytes, check_sum, type, status, virtual, org_id, created_at]
+  enums:
+    type: [GNT, WGS, EXTERNAL]
+  operations: [data_files_list, data_files_upload_create, data_files_update, data_files_delete, data_files_download_list]
+- name: ExecutionOrder
+  path: /exec/orders
+  description: >-
+    A run of one analysis model against one source file. The central workflow object; carries status
+    through to a terminal Completed or Failed state, which is the second webhook event.
+  key_fields: [id, source_file_id, model_name, model_api_name, status, result_types, tags_ids, amount_of_samples, org_id, created_at]
+  enums:
+    status: [Registered, Preparing, Submitted, Running, Model completed, Completed, Failed, Canceled, Canceling, Making report, Collecting report results, Reports failed, QC failed]
+    status_group: [initializing, running, completed, failed]
+  operations: [exec_orders_list, exec_orders_create, exec_orders_partial_update, exec_cancel_create]
+- name: Tag
+  path: /exec/tags
+  description: A free-form label applied to orders for grouping and filtering.
+  key_fields: [id, name, org_id, created_at]
+  operations: [exec_tags_list, exec_tags_create, exec_tags_read, exec_tags_update, exec_tags_delete]
+- name: Model
+  path: /exec/model
+  description: >-
+    A containerized analysis pipeline, tracked with an ECR image tag, digest and push time, and
+    flagged clinical_validated and deprecated.
+  key_fields: [id, model_name, model_api_name, image_tag, image_digest, image_pushed_at, clinical_validated, deprecated, used_in_orgs]
+  operations: [exec_model_list, exec_model_create, exec_model_api_list, exec_model_ecr_list, exec_model_ecr_create]
+- name: NamedModel
+  path: /exec/named_model
+  description: >-
+    A stable, human-facing name pinned to a model version, with its own change history. This is the
+    indirection that lets a caller submit orders against a name rather than an image digest.
+  key_fields: [id, name, model_id, created_at]
+  operations: [exec_named_model_list, exec_named_model_create, exec_named_model_update, exec_named_model_history_list]
+- name: Result
+  path: /data/results/{exec_order_id}
+  description: >-
+    The output of a completed order, retrievable per result_type as a file, as JSON, or as a PDF
+    report. Not a standalone resource - always addressed through its order.
+  key_fields: [result_id, exec_order_id, result_type, sample_id]
+  enums:
+    result_type: [SUMMARY_SUPERSET, SUMMARY_CHROMS, DETAILED_SUPERSET, DETAILED_CHROMS, WHOLE_RESULT, CHROMS_SVG, PDF_REPORT, PRS_DATA, PRS_TECH_DATA, PRS_QC, EXEC_ERRORS, UNKNOWN]
+  payload_fields: [result_sub_pop, result_sub_pop_chrm, result_super_pop, result_super_pop_chrm, result_svg_data, result_prs_data, result_prs_tech_data, result_prs_qc]
+  operations: [data_results_download_list, data_results_json_list, data_results_upload_create]
+- name: PdfReport
+  path: /data/results/{exec_order_id}/pdf_report
+  description: >-
+    A generated clinical or research-use PDF for an order, requested per report type and versioned
+    by request_version / report_version.
+  key_fields: [pdf_request_id, exec_order_id, sample_id, request_version, report_version]
+  enums:
+    report_type: [PRS_RUO_CARDIO, PRS_RUO_CANCER, PRS_CLINICAL_CARDIO, PRS_CLINICAL_CANCER]
+  payload_fields: [ancestry_pdf_report, prs_ruo_cardio_pdf_report, prs_ruo_cancer_pdf_report, prs_clinical_cardio_pdf_report, prs_clinical_cancer_pdf_report]
+  operations: [data_results_pdf_report_list, data_results_request_pdf_create, data_results_pdf_report_change_notice_create, data_pdfdata_list]
+- name: SftpUser
+  path: /organizations/{organization_id}/sftp_users
+  description: A per-organization SFTP account used for bulk upload of large source files.
+  key_fields: [id, org_id]
+  operations: [organizations_sftp_users_list, organizations_sftp_users_create, organizations_sftp_users_delete, organizations_sftp_users_sync_list]
+- name: SshKey
+  path: /organizations/{organization_id}/sftp_users/{sftp_user_id}/ssh_keys
+  description: A public key authorizing an SFTP user.
+  key_fields: [ssh_key_id, sftp_user_id]
+  operations: [organizations_sftp_users_ssh_keys_create, organizations_sftp_users_ssh_keys_delete]
+- name: WebhookSubscription
+  path: /organizations/{organization_id}/webhooks-info
+  description: An organization's registration of a remote endpoint for one webhook action.
+  key_fields: [id, org_id, webhook_action, remote_endpoint, max_retries_count, save_error_in_notifications, created_at]
+  enums:
+    webhook_action: [order_moved_to_completed_state, source_file_validation_completed]
+  operations: [organizations_webhooks-info_list, organizations_webhooks-info_create, organizations_webhooks_test_create]
+  see: asyncapi/galatea-bio-octopod-webhooks.yml
+- name: Notification
+  path: /notification
+  description: In-platform notification records, including saved webhook delivery errors.
+  key_fields: [id, org_id, created_at]
+  operations: [notification_list, notification_watch_update]
+- name: CreditBalance
+  path: /credit/balance
+  description: Current credit balance for an organization.
+  key_fields: [id, org_id, balance, created_at, updated_at]
+  operations: [credit_balance_list]
+- name: CreditLedger
+  path: /credit/ledger
+  description: Append-only record of credit movements.
+  key_fields: [id, org_id, amount, transaction_id, created_at]
+  operations: [credit_ledger_list]
+- name: CreditExchange
+  path: /credit/exchange
+  description: Currency exchange rate rows used to price credits.
+  key_fields: [id, rate, currency_from, created_at]
+  operations: [credit_exchange_list, credit_exchange_create, credit_exchange_update, credit_exchange_delete]
+- name: CreditTariff
+  path: /credit/tariff
+  description: Per-service pricing rows attached to a credit service.
+  key_fields: [id, price, credit_service, org_id]
+  operations: [credit_tariff_list, credit_tariff_create, credit_tariff_update, credit_tariff_delete]
+- name: CreditService
+  path: /credit/service
+  description: A billable service a tariff can price.
+  key_fields: [id, name, credit_service_id]
+  operations: [credit_service_list, credit_service_create, credit_service_delete]
+relationships:
+- {from: Organization, to: User, type: has_many, via: org_id, confidence: high}
+- {from: User, to: Organization, type: belongs_to, via: org_id, confidence: high}
+- {from: Organization, to: SourceFile, type: has_many, via: org_id, confidence: high}
+- {from: Organization, to: ExecutionOrder, type: has_many, via: org_id, confidence: high}
+- {from: Organization, to: Tag, type: has_many, via: org_id, confidence: high}
+- {from: Organization, to: SftpUser, type: has_many, via: org_id, confidence: high}
+- {from: SftpUser, to: SshKey, type: has_many, via: sftp_user_id, confidence: high}
+- {from: Organization, to: WebhookSubscription, type: has_many, via: org_id, confidence: high}
+- {from: Organization, to: Notification, type: has_many, via: org_id, confidence: high}
+- {from: Organization, to: CreditBalance, type: has_one, via: org_id, confidence: high}
+- {from: Organization, to: CreditLedger, type: has_many, via: org_id, confidence: high}
+- {from: Organization, to: Model, type: has_many, via: available_models, confidence: medium, note: "Entitlement, not ownership; granted via organizations_models_permissions_create."}
+- {from: ExecutionOrder, to: SourceFile, type: belongs_to, via: source_file_id, confidence: high}
+- {from: SourceFile, to: ExecutionOrder, type: has_many, via: source_file_id, confidence: high}
+- {from: ExecutionOrder, to: NamedModel, type: belongs_to, via: model_name, confidence: high, note: "Referenced by name, not by id, in the submit payload."}
+- {from: NamedModel, to: Model, type: belongs_to, via: model_id, confidence: high}
+- {from: ExecutionOrder, to: Tag, type: has_many, via: tags_ids, confidence: high, note: "Many-to-many; the full tag set is replaced on PATCH."}
+- {from: ExecutionOrder, to: Result, type: has_many, via: exec_order_id, confidence: high, note: "One result per result_type; the order's result_types field enumerates what is available."}
+- {from: ExecutionOrder, to: PdfReport, type: has_many, via: exec_order_id, confidence: high}
+- {from: PdfReport, to: Result, type: belongs_to, via: result_type PDF_REPORT, confidence: medium}
+- {from: CreditTariff, to: CreditService, type: belongs_to, via: credit_service_id, confidence: high}
+- {from: CreditExchange, to: CreditLedger, type: has_many, via: transaction_id, confidence: low, note: "Inferred from field naming; no explicit link in the spec."}
+core_workflow:
+  description: The primary path an integrator follows, expressed as entity transitions.
+  steps:
+  - upload a SourceFile (API or SFTP)
+  - await source_file_validation_completed webhook, or poll data_files_list until status is valid
+  - submit an ExecutionOrder naming the SourceFile and a NamedModel
+  - await order_moved_to_completed_state webhook, or poll exec_orders_list with filter
+  - download Results by result_type, and PdfReports by pdf_request_id
+  see: skills/_index.yml
+coverage:
+  paths: 79
+  operations: 99
+  entities_identified: 18
+  relationships: 22
+  named_schemas_in_spec: 0
+  note: >-
+    definitions is empty in the source document, so no schema names are authoritative. Entity names
+    here are assigned by API Evangelist from path and field semantics and should be read as a
+    derived map, not as the provider's own vocabulary.

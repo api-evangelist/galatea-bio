@@ -1,0 +1,131 @@
+generated: '2026-08-16'
+method: derived
+status: candidate
+source: openapi/galatea-bio-octopod-openapi.yml
+note: >-
+  Galatea Bio ships NO MCP server. This file is a candidate tool list API Evangelist derived from
+  the provider's published OpenAPI so the shape of a future server is visible; it is not a claim
+  that any agent surface exists today. NO MCPServer pointer is emitted in apis.yml, and none should
+  be added unless Galatea Bio actually publishes a server.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  verified: derived
+  note: >-
+    auth records what a server WOULD need - the Octopod API is bearer-token only, via either an
+    organization API key or a short-lived password-derived access token.
+search:
+  performed: '2026-08-16'
+  found: false
+  probes:
+  - {url: 'https://mcp.galatea.bio/mcp', result: dns-nxdomain}
+  - {url: 'https://api.galatea.bio/mcp', method: 'POST tools/list', http_status: 404}
+  - {url: 'https://api.galatea.bio/sse', method: 'POST tools/list', http_status: 404}
+  - {url: 'https://galatea.bio/mcp', method: 'POST tools/list', http_status: 200, result: 'spa-shell-html, not an MCP endpoint - rejected as a false positive'}
+  registries_checked:
+  - {registry: npm, query: '@galateabio/*', result: absent}
+  - {registry: pypi, query: 'galatea / octopod mcp', result: absent}
+  - {registry: github, org: GalateaBio, result: 'three public repos - octopod-cli plus two forks; no MCP server'}
+candidate_server:
+  name: octopod
+  transport: http
+  base_api: https://api.galatea.bio/api/v1
+  auth: 'Authorization: Bearer <api_key>'
+  scope_note: >-
+    Only the customer-facing subset is proposed as tools. The credit, dashboard, statistics,
+    internal and organization-administration tags are deliberately excluded - they are admin-scoped
+    and unsuitable for agent delegation.
+tools:
+- name: list_source_files
+  description: List uploaded genomic source files, with optional name, date and status filters.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#data_files_list
+  action_class: read
+- name: get_source_file
+  description: Fetch a single source file by id.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#data_files_list
+  action_class: read
+  note: No dedicated read-by-id operation exists; the client filters the list endpoint by file id.
+- name: upload_source_file
+  description: Upload a genomic source file under 50 MB. Larger files must go over SFTP.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#data_files_upload_create
+  action_class: write
+- name: delete_source_file
+  description: Delete a source file by id.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#data_files_delete
+  action_class: destructive
+- name: update_sample_alias
+  description: Set a new sample alias on a source file.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#data_files_update
+  action_class: write
+- name: list_orders
+  description: List execution orders filtered by status, status group, model, tags or date range.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#exec_orders_list
+  action_class: read
+- name: submit_order
+  description: Submit an execution order for a source file against a named analysis model.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#exec_orders_create
+  action_class: write
+  note: Consumes organization credits. Should require confirmation before an agent invokes it.
+- name: cancel_order
+  description: Cancel a running execution order.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#exec_cancel_create
+  action_class: destructive
+- name: update_order_tags
+  description: Replace the tag set on an order.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#exec_orders_partial_update
+  action_class: write
+- name: list_tags
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#exec_tags_list
+  action_class: read
+- name: get_tag
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#exec_tags_read
+  action_class: read
+- name: create_tag
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#exec_tags_create
+  action_class: write
+- name: update_tag
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#exec_tags_update
+  action_class: write
+- name: delete_tag
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#exec_tags_delete
+  action_class: destructive
+- name: download_result
+  description: Download an order result file by result type.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#data_results_download_list
+  action_class: read
+- name: get_result_json
+  description: Retrieve an order result as JSON for summary and detailed superset/chroms types.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#data_results_json_list
+  action_class: read
+- name: list_pdf_reports
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#data_results_pdf_report_list
+  action_class: read
+- name: request_pdf_report
+  description: Request generation of a PDF report for a completed order.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#data_results_request_pdf_create
+  action_class: write
+- name: get_organization_info
+  description: Return the caller's profile and organization, including its available_models list.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#users_me_list
+  action_class: read
+- name: list_organization_models
+  description: List the analysis models an organization may run, optionally hiding deprecated ones.
+  source_operation: openapi/galatea-bio-octopod-openapi.yml#organizations_models_list
+  action_class: read
+coverage:
+  candidate_tools: 20
+  rest_operations_total: 99
+  rest_operations_covered: 19
+  excluded_tags: [credit, dashboard, statistics, internal, notification, auth]
+  note: >-
+    No tool crosswalk artifact is written: a crosswalk records divergence between a real MCP surface
+    and a real REST surface, and there is no MCP surface here to diverge.
+sensitivity:
+  data_class: human genomic data, clinical and research
+  warning: >-
+    Any future agent surface over this API handles identifiable genomic material under a
+    CLIA/CAP-regulated workflow. Write and destructive tools above should carry human-in-the-loop
+    escalation - see agentic-access/galatea-bio-agentic-access.yml.
