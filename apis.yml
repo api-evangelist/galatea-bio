@@ -19,6 +19,18 @@ specificationVersion: '0.23'
 created: '2026-08-16'
 modified: '2026-08-16'
 tags:
+- Genomics
+- Bioinformatics
+- Ancestry
+- Precision Medicine
+- polygenic-risk-score
+- Clinical Laboratory
+- Genetic Testing
+- Biobank
+- Life Sciences
+- Health
+- Sequencing
+tags_raw:
 - genomics
 - bioinformatics
 - ancestry
@@ -40,6 +52,12 @@ apis:
   humanURL: https://docs.galatea.bio/
   baseURL: https://api.galatea.bio/api/v1
   tags:
+  - Genomics
+  - Ancestry
+  - polygenic-risk-score
+  - Bioinformatics
+  - Genetic Testing
+  tags_raw:
   - genomics
   - ancestry
   - polygenic-risk-score
