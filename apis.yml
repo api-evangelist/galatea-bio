@@ -43,29 +43,16 @@ tags_raw:
 - health
 - sequencing
 apis:
-- name: Octopod Ancestry API
-  description: >-
-    REST API (Swagger 2.0, 99 operations across 79 paths) for the Galatea Bio Octopod platform. Covers
-    JWT authentication, source-file upload/validation, execution orders against named analysis models,
-    tag management, result and PDF report retrieval, organization/SFTP administration, webhook
-    configuration, credit accounting and dashboards. Bearer-token auth; page/page_size pagination.
+- aid: galatea-bio:galatea-bio-auth-api
+  name: Galatea Bio Auth API
+  description: The auth API from Galatea Bio — 5 operation(s) for auth.
   humanURL: https://docs.galatea.bio/
   baseURL: https://api.galatea.bio/api/v1
   tags:
-  - Genomics
-  - Ancestry
-  - polygenic-risk-score
-  - Bioinformatics
-  - Genetic Testing
-  tags_raw:
-  - genomics
-  - ancestry
-  - polygenic-risk-score
-  - bioinformatics
-  - genetic-testing
+  - auth
   properties:
   - type: OpenAPI
-    url: openapi/galatea-bio-octopod-openapi.yml
+    url: openapi/galatea-bio-auth-api-openapi.yml
   - type: Documentation
     url: https://docs.galatea.bio/
   - type: APIReference
@@ -80,8 +67,258 @@ apis:
     url: errors/galatea-bio-problem-types.yml
   - type: DataModel
     url: data-model/galatea-bio-data-model.yml
-  - type: Overlay
-    url: overlays/galatea-bio-octopod-overlay.yaml
+  - type: Webhooks
+    url: asyncapi/galatea-bio-octopod-webhooks.yml
+  - type: Sandbox
+    url: sandbox/galatea-bio-sandbox.yml
+- aid: galatea-bio:galatea-bio-credit-api
+  name: Galatea Bio Credit API
+  description: The credit API from Galatea Bio — 14 operation(s) for credit.
+  humanURL: https://docs.galatea.bio/
+  baseURL: https://api.galatea.bio/api/v1
+  tags:
+  - credit
+  properties:
+  - type: OpenAPI
+    url: openapi/galatea-bio-credit-api-openapi.yml
+  - type: Documentation
+    url: https://docs.galatea.bio/
+  - type: APIReference
+    url: https://docs.galatea.bio/#api-reference-contents
+  - type: Swagger
+    url: https://api.galatea.bio/swagger/
+  - type: Authentication
+    url: authentication/galatea-bio-authentication.yml
+  - type: Conventions
+    url: conventions/galatea-bio-conventions.yml
+  - type: ErrorCatalog
+    url: errors/galatea-bio-problem-types.yml
+  - type: DataModel
+    url: data-model/galatea-bio-data-model.yml
+  - type: Webhooks
+    url: asyncapi/galatea-bio-octopod-webhooks.yml
+  - type: Sandbox
+    url: sandbox/galatea-bio-sandbox.yml
+- aid: galatea-bio:galatea-bio-dashboard-api
+  name: Galatea Bio Dashboard API
+  description: The dashboard API from Galatea Bio — 7 operation(s) for dashboard.
+  humanURL: https://docs.galatea.bio/
+  baseURL: https://api.galatea.bio/api/v1
+  tags:
+  - dashboard
+  properties:
+  - type: OpenAPI
+    url: openapi/galatea-bio-dashboard-api-openapi.yml
+  - type: Documentation
+    url: https://docs.galatea.bio/
+  - type: APIReference
+    url: https://docs.galatea.bio/#api-reference-contents
+  - type: Swagger
+    url: https://api.galatea.bio/swagger/
+  - type: Authentication
+    url: authentication/galatea-bio-authentication.yml
+  - type: Conventions
+    url: conventions/galatea-bio-conventions.yml
+  - type: ErrorCatalog
+    url: errors/galatea-bio-problem-types.yml
+  - type: DataModel
+    url: data-model/galatea-bio-data-model.yml
+  - type: Webhooks
+    url: asyncapi/galatea-bio-octopod-webhooks.yml
+  - type: Sandbox
+    url: sandbox/galatea-bio-sandbox.yml
+- aid: galatea-bio:galatea-bio-data-api
+  name: Galatea Bio Data API
+  description: The data API from Galatea Bio — 12 operation(s) for data.
+  humanURL: https://docs.galatea.bio/
+  baseURL: https://api.galatea.bio/api/v1
+  tags:
+  - data
+  properties:
+  - type: OpenAPI
+    url: openapi/galatea-bio-data-api-openapi.yml
+  - type: Documentation
+    url: https://docs.galatea.bio/
+  - type: APIReference
+    url: https://docs.galatea.bio/#api-reference-contents
+  - type: Swagger
+    url: https://api.galatea.bio/swagger/
+  - type: Authentication
+    url: authentication/galatea-bio-authentication.yml
+  - type: Conventions
+    url: conventions/galatea-bio-conventions.yml
+  - type: ErrorCatalog
+    url: errors/galatea-bio-problem-types.yml
+  - type: DataModel
+    url: data-model/galatea-bio-data-model.yml
+  - type: Webhooks
+    url: asyncapi/galatea-bio-octopod-webhooks.yml
+  - type: Sandbox
+    url: sandbox/galatea-bio-sandbox.yml
+- aid: galatea-bio:galatea-bio-exec-api
+  name: Galatea Bio Exec API
+  description: The exec API from Galatea Bio — 11 operation(s) for exec.
+  humanURL: https://docs.galatea.bio/
+  baseURL: https://api.galatea.bio/api/v1
+  tags:
+  - exec
+  properties:
+  - type: OpenAPI
+    url: openapi/galatea-bio-exec-api-openapi.yml
+  - type: Documentation
+    url: https://docs.galatea.bio/
+  - type: APIReference
+    url: https://docs.galatea.bio/#api-reference-contents
+  - type: Swagger
+    url: https://api.galatea.bio/swagger/
+  - type: Authentication
+    url: authentication/galatea-bio-authentication.yml
+  - type: Conventions
+    url: conventions/galatea-bio-conventions.yml
+  - type: ErrorCatalog
+    url: errors/galatea-bio-problem-types.yml
+  - type: DataModel
+    url: data-model/galatea-bio-data-model.yml
+  - type: Webhooks
+    url: asyncapi/galatea-bio-octopod-webhooks.yml
+  - type: Sandbox
+    url: sandbox/galatea-bio-sandbox.yml
+- aid: galatea-bio:galatea-bio-internal-api
+  name: Galatea Bio Internal API
+  description: The internal API from Galatea Bio — 4 operation(s) for internal.
+  humanURL: https://docs.galatea.bio/
+  baseURL: https://api.galatea.bio/api/v1
+  tags:
+  - internal
+  properties:
+  - type: OpenAPI
+    url: openapi/galatea-bio-internal-api-openapi.yml
+  - type: Documentation
+    url: https://docs.galatea.bio/
+  - type: APIReference
+    url: https://docs.galatea.bio/#api-reference-contents
+  - type: Swagger
+    url: https://api.galatea.bio/swagger/
+  - type: Authentication
+    url: authentication/galatea-bio-authentication.yml
+  - type: Conventions
+    url: conventions/galatea-bio-conventions.yml
+  - type: ErrorCatalog
+    url: errors/galatea-bio-problem-types.yml
+  - type: DataModel
+    url: data-model/galatea-bio-data-model.yml
+  - type: Webhooks
+    url: asyncapi/galatea-bio-octopod-webhooks.yml
+  - type: Sandbox
+    url: sandbox/galatea-bio-sandbox.yml
+- aid: galatea-bio:galatea-bio-notification-api
+  name: Galatea Bio Notification API
+  description: The notification API from Galatea Bio — 3 operation(s) for notification.
+  humanURL: https://docs.galatea.bio/
+  baseURL: https://api.galatea.bio/api/v1
+  tags:
+  - notification
+  properties:
+  - type: OpenAPI
+    url: openapi/galatea-bio-notification-api-openapi.yml
+  - type: Documentation
+    url: https://docs.galatea.bio/
+  - type: APIReference
+    url: https://docs.galatea.bio/#api-reference-contents
+  - type: Swagger
+    url: https://api.galatea.bio/swagger/
+  - type: Authentication
+    url: authentication/galatea-bio-authentication.yml
+  - type: Conventions
+    url: conventions/galatea-bio-conventions.yml
+  - type: ErrorCatalog
+    url: errors/galatea-bio-problem-types.yml
+  - type: DataModel
+    url: data-model/galatea-bio-data-model.yml
+  - type: Webhooks
+    url: asyncapi/galatea-bio-octopod-webhooks.yml
+  - type: Sandbox
+    url: sandbox/galatea-bio-sandbox.yml
+- aid: galatea-bio:galatea-bio-organizations-api
+  name: Galatea Bio Organizations API
+  description: The organizations API from Galatea Bio — 13 operation(s) for organizations.
+  humanURL: https://docs.galatea.bio/
+  baseURL: https://api.galatea.bio/api/v1
+  tags:
+  - organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/galatea-bio-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.galatea.bio/
+  - type: APIReference
+    url: https://docs.galatea.bio/#api-reference-contents
+  - type: Swagger
+    url: https://api.galatea.bio/swagger/
+  - type: Authentication
+    url: authentication/galatea-bio-authentication.yml
+  - type: Conventions
+    url: conventions/galatea-bio-conventions.yml
+  - type: ErrorCatalog
+    url: errors/galatea-bio-problem-types.yml
+  - type: DataModel
+    url: data-model/galatea-bio-data-model.yml
+  - type: Webhooks
+    url: asyncapi/galatea-bio-octopod-webhooks.yml
+  - type: Sandbox
+    url: sandbox/galatea-bio-sandbox.yml
+- aid: galatea-bio:galatea-bio-statistics-api
+  name: Galatea Bio Statistics API
+  description: The statistics API from Galatea Bio — 2 operation(s) for statistics.
+  humanURL: https://docs.galatea.bio/
+  baseURL: https://api.galatea.bio/api/v1
+  tags:
+  - statistics
+  properties:
+  - type: OpenAPI
+    url: openapi/galatea-bio-statistics-api-openapi.yml
+  - type: Documentation
+    url: https://docs.galatea.bio/
+  - type: APIReference
+    url: https://docs.galatea.bio/#api-reference-contents
+  - type: Swagger
+    url: https://api.galatea.bio/swagger/
+  - type: Authentication
+    url: authentication/galatea-bio-authentication.yml
+  - type: Conventions
+    url: conventions/galatea-bio-conventions.yml
+  - type: ErrorCatalog
+    url: errors/galatea-bio-problem-types.yml
+  - type: DataModel
+    url: data-model/galatea-bio-data-model.yml
+  - type: Webhooks
+    url: asyncapi/galatea-bio-octopod-webhooks.yml
+  - type: Sandbox
+    url: sandbox/galatea-bio-sandbox.yml
+- aid: galatea-bio:galatea-bio-users-api
+  name: Galatea Bio Users API
+  description: The users API from Galatea Bio — 8 operation(s) for users.
+  humanURL: https://docs.galatea.bio/
+  baseURL: https://api.galatea.bio/api/v1
+  tags:
+  - users
+  properties:
+  - type: OpenAPI
+    url: openapi/galatea-bio-users-api-openapi.yml
+  - type: Documentation
+    url: https://docs.galatea.bio/
+  - type: APIReference
+    url: https://docs.galatea.bio/#api-reference-contents
+  - type: Swagger
+    url: https://api.galatea.bio/swagger/
+  - type: Authentication
+    url: authentication/galatea-bio-authentication.yml
+  - type: Conventions
+    url: conventions/galatea-bio-conventions.yml
+  - type: ErrorCatalog
+    url: errors/galatea-bio-problem-types.yml
+  - type: DataModel
+    url: data-model/galatea-bio-data-model.yml
   - type: Webhooks
     url: asyncapi/galatea-bio-octopod-webhooks.yml
   - type: Sandbox
