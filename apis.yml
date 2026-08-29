@@ -11,6 +11,18 @@ description: >-
   a file validates or an order completes, and download ancestry, PRS, JSON and PDF report results. The
   same API also exposes organization administration, SFTP user and SSH key management, credit/tariff
   accounting, dashboards and statistics.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://galatea.bio/favicon.png
 url: https://raw.githubusercontent.com/api-evangelist/galatea-bio/refs/heads/main/apis.yml
 x-type: company
