@@ -31,17 +31,17 @@ specificationVersion: '0.23'
 created: '2026-08-16'
 modified: '2026-08-16'
 tags:
-- Genomics
-- Bioinformatics
-- Ancestry
-- Precision Medicine
+- genomics
+- bioinformatics
+- ancestry
+- precision-medicine
 - polygenic-risk-score
-- Clinical Laboratory
-- Genetic Testing
-- Biobank
-- Life Sciences
+- clinical-laboratory
+- genetic-testing
+- biobank
+- life-sciences
 - Health
-- Sequencing
+- sequencing
 tags_raw:
 - genomics
 - bioinformatics
@@ -61,6 +61,8 @@ apis:
   humanURL: https://docs.galatea.bio/
   baseURL: https://api.galatea.bio/api/v1
   tags:
+  - Authentication
+  tags_raw:
   - auth
   properties:
   - type: OpenAPI
@@ -89,6 +91,8 @@ apis:
   humanURL: https://docs.galatea.bio/
   baseURL: https://api.galatea.bio/api/v1
   tags:
+  - Credit
+  tags_raw:
   - credit
   properties:
   - type: OpenAPI
@@ -117,6 +121,8 @@ apis:
   humanURL: https://docs.galatea.bio/
   baseURL: https://api.galatea.bio/api/v1
   tags:
+  - Dashboard
+  tags_raw:
   - dashboard
   properties:
   - type: OpenAPI
@@ -145,6 +151,8 @@ apis:
   humanURL: https://docs.galatea.bio/
   baseURL: https://api.galatea.bio/api/v1
   tags:
+  - Data
+  tags_raw:
   - data
   properties:
   - type: OpenAPI
@@ -173,6 +181,8 @@ apis:
   humanURL: https://docs.galatea.bio/
   baseURL: https://api.galatea.bio/api/v1
   tags:
+  - Exec
+  tags_raw:
   - exec
   properties:
   - type: OpenAPI
@@ -201,6 +211,8 @@ apis:
   humanURL: https://docs.galatea.bio/
   baseURL: https://api.galatea.bio/api/v1
   tags:
+  - Internal
+  tags_raw:
   - internal
   properties:
   - type: OpenAPI
@@ -229,6 +241,8 @@ apis:
   humanURL: https://docs.galatea.bio/
   baseURL: https://api.galatea.bio/api/v1
   tags:
+  - Notification
+  tags_raw:
   - notification
   properties:
   - type: OpenAPI
@@ -257,6 +271,8 @@ apis:
   humanURL: https://docs.galatea.bio/
   baseURL: https://api.galatea.bio/api/v1
   tags:
+  - Organization
+  tags_raw:
   - organizations
   properties:
   - type: OpenAPI
@@ -285,6 +301,8 @@ apis:
   humanURL: https://docs.galatea.bio/
   baseURL: https://api.galatea.bio/api/v1
   tags:
+  - Statistics
+  tags_raw:
   - statistics
   properties:
   - type: OpenAPI
@@ -313,6 +331,8 @@ apis:
   humanURL: https://docs.galatea.bio/
   baseURL: https://api.galatea.bio/api/v1
   tags:
+  - User
+  tags_raw:
   - users
   properties:
   - type: OpenAPI
