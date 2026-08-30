@@ -1,0 +1,961 @@
+openapi: 3.2.0
+info:
+  title: Octopod Data API
+  version: v1
+servers:
+- url: https://api.galatea.bio/api/v1
+security:
+- Bearer: []
+tags:
+- name: data
+paths:
+  /data/files:
+    parameters: []
+    get:
+      operationId: data_files_list
+      description: Get source files with pagination
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        schema:
+          type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      - name: file
+        in: query
+        description: Search by id or filename
+        required: false
+        schema:
+          type: string
+      - name: only_acceptable
+        in: query
+        description: Search in not deleted and acceptable files
+        required: false
+        schema:
+          type: boolean
+      - name: org_names
+        in: query
+        description: Search by organizations names
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: min_date
+        in: query
+        description: Search by date range
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: max_date
+        in: query
+        description: Search by date range
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: show_virtual
+        in: query
+        description: Show virtual/external source files
+        required: false
+        schema:
+          type: boolean
+      - name: files_ids
+        in: query
+        description: List of File IDs for search
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Paginated entity list
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  previous:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  results:
+                    type: array
+                    items:
+                      required:
+                      - id
+                      - src_file_name
+                      - file_size_bytes
+                      type: object
+                      properties:
+                        id:
+                          title: Id
+                          type: string
+                          format: uuid
+                        status:
+                          title: Status
+                          type: string
+                          readOnly: true
+                        src_file_name:
+                          title: Src file name
+                          type: string
+                          maxLength: 190
+                          minLength: 1
+                        src_short_file_path:
+                          title: Src short file path
+                          type: string
+                          readOnly: true
+                        file_size_bytes:
+                          title: File size bytes
+                          type: integer
+                          maximum: 9223372036854775807
+                          minimum: -9223372036854775808
+                        created_at:
+                          title: Created at
+                          type: string
+                          format: date-time
+                          readOnly: true
+                        check_sum:
+                          title: Check sum
+                          type:
+                          - string
+                          - 'null'
+                          maxLength: 128
+                          minLength: 1
+                        acceptable:
+                          title: Acceptable
+                          type: boolean
+                        purged_from_storage:
+                          title: Purged from storage
+                          type: boolean
+                        orders_count:
+                          title: Orders count
+                          type: integer
+                          readOnly: true
+                          default: 0
+                        genome_type:
+                          title: Genome type
+                          type: string
+                          enum:
+                          - GNT
+                          - WGS
+                        amount_of_samples:
+                          title: Amount of samples
+                          type: integer
+                          maximum: 2147483647
+                          minimum: -2147483648
+                        deleted_at:
+                          title: Deleted at
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        org_name:
+                          title: Org name
+                          type: string
+                          readOnly: true
+                        check_completed:
+                          title: Check completed
+                          type: boolean
+                        sample_alias:
+                          title: Sample alias
+                          type: string
+                          readOnly: true
+                        check_information:
+                          title: Check information
+                          type:
+                          - string
+                          - 'null'
+                          maxLength: 1000
+                        virtual:
+                          title: Virtual
+                          type: boolean
+      tags:
+      - data
+  /data/files/upload:
+    parameters: []
+    post:
+      operationId: data_files_upload_create
+      description: Upload source file
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '201':
+          description: Source file
+          content:
+            application/json:
+              schema:
+                required:
+                - id
+                - src_file_name
+                - file_size_bytes
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                  status:
+                    title: Status
+                    type: string
+                    readOnly: true
+                  src_file_name:
+                    title: Src file name
+                    type: string
+                    maxLength: 190
+                    minLength: 1
+                  src_short_file_path:
+                    title: Src short file path
+                    type: string
+                    readOnly: true
+                  file_size_bytes:
+                    title: File size bytes
+                    type: integer
+                    maximum: 9223372036854775807
+                    minimum: -9223372036854775808
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  check_sum:
+                    title: Check sum
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 128
+                    minLength: 1
+                  acceptable:
+                    title: Acceptable
+                    type: boolean
+                  purged_from_storage:
+                    title: Purged from storage
+                    type: boolean
+                  orders_count:
+                    title: Orders count
+                    type: integer
+                    readOnly: true
+                    default: 0
+                  genome_type:
+                    title: Genome type
+                    type: string
+                    enum:
+                    - GNT
+                    - WGS
+                  amount_of_samples:
+                    title: Amount of samples
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                  deleted_at:
+                    title: Deleted at
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  org_name:
+                    title: Org name
+                    type: string
+                    readOnly: true
+                  check_completed:
+                    title: Check completed
+                    type: boolean
+                  sample_alias:
+                    title: Sample alias
+                    type: string
+                    readOnly: true
+                  check_information:
+                    title: Check information
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 1000
+                  virtual:
+                    title: Virtual
+                    type: boolean
+      tags:
+      - data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: Source file
+                  format: binary
+              required:
+              - file
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: Source file
+                  format: binary
+              required:
+              - file
+  /data/files/{source_file_id}:
+    parameters:
+    - name: source_file_id
+      in: path
+      required: true
+      schema:
+        type: string
+    put:
+      operationId: data_files_update
+      description: Update source file
+      parameters:
+      - name: source_file_id
+        in: path
+        description: Id of source file
+        required: true
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+        '201':
+          description: Source file
+          content:
+            application/json:
+              schema:
+                required:
+                - id
+                - src_file_name
+                - file_size_bytes
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                  status:
+                    title: Status
+                    type: string
+                    readOnly: true
+                  src_file_name:
+                    title: Src file name
+                    type: string
+                    maxLength: 190
+                    minLength: 1
+                  src_short_file_path:
+                    title: Src short file path
+                    type: string
+                    readOnly: true
+                  file_size_bytes:
+                    title: File size bytes
+                    type: integer
+                    maximum: 9223372036854775807
+                    minimum: -9223372036854775808
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  check_sum:
+                    title: Check sum
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 128
+                    minLength: 1
+                  acceptable:
+                    title: Acceptable
+                    type: boolean
+                  purged_from_storage:
+                    title: Purged from storage
+                    type: boolean
+                  orders_count:
+                    title: Orders count
+                    type: integer
+                    readOnly: true
+                    default: 0
+                  genome_type:
+                    title: Genome type
+                    type: string
+                    enum:
+                    - GNT
+                    - WGS
+                  amount_of_samples:
+                    title: Amount of samples
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                  deleted_at:
+                    title: Deleted at
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  org_name:
+                    title: Org name
+                    type: string
+                    readOnly: true
+                  check_completed:
+                    title: Check completed
+                    type: boolean
+                  sample_alias:
+                    title: Sample alias
+                    type: string
+                    readOnly: true
+                  check_information:
+                    title: Check information
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 1000
+                  virtual:
+                    title: Virtual
+                    type: boolean
+      tags:
+      - data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sample_alias:
+                  title: Sample alias
+                  type:
+                  - string
+                  - 'null'
+        required: true
+    delete:
+      operationId: data_files_delete
+      description: Delete source file
+      parameters:
+      - name: source_file_id
+        in: path
+        description: Id of source file
+        required: true
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+        '200':
+          description: ok
+      tags:
+      - data
+  /data/files/{source_file_id}/download:
+    parameters:
+    - name: source_file_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: data_files_download_list
+      description: Download source file
+      parameters:
+      - name: source_file_id
+        in: path
+        description: Id of source file
+        required: true
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+        '200':
+          description: Source file stream
+      tags:
+      - data
+  /data/pdfdata:
+    parameters: []
+    get:
+      operationId: data_pdfdata_list
+      description: test view
+      parameters:
+      - name: order_id
+        in: query
+        description: Id of order
+        required: true
+        schema:
+          type: string
+      - name: result_id
+        in: query
+        description: Id of sample result
+        required: true
+        schema:
+          type: string
+      responses:
+        '400':
+          description: '{"detail": "Bad request"}'
+        '401':
+          description: '{"detail": "Unauthorized request"}'
+        '403':
+          description: '{"detail": "Forbidden"}'
+        '404':
+          description: '{"detail": "Not found data"}'
+        '200':
+          description: '{"detail": "Data for PDF report"}'
+      tags:
+      - data
+  /data/prsdata:
+    parameters: []
+    get:
+      operationId: data_prsdata_list
+      description: test view
+      parameters:
+      - name: order_id
+        in: query
+        description: Id of order
+        required: true
+        schema:
+          type: string
+      - name: result_id
+        in: query
+        description: Id of sample result
+        required: true
+        schema:
+          type: string
+      - name: report_type
+        in: query
+        description: report type
+        required: false
+        schema:
+          type: string
+      responses:
+        '400':
+          description: '{"detail": "Bad request"}'
+        '401':
+          description: '{"detail": "Unauthorized request"}'
+        '403':
+          description: '{"detail": "Forbidden"}'
+        '404':
+          description: '{"detail": "Not found data"}'
+        '200':
+          description: '{"detail": "Data for PDF report"}'
+      tags:
+      - data
+  /data/results/pdf_report/{pdf_request_id}/change_notice:
+    parameters:
+    - name: pdf_request_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: data_results_pdf_report_change_notice_create
+      description: ''
+      responses:
+        '201':
+          description: ''
+      tags:
+      - data
+  /data/results/upload:
+    parameters: []
+    post:
+      operationId: data_results_upload_create
+      description: Upload result file
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '201':
+          description: ok
+      tags:
+      - data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: Result file
+                  format: binary
+                model_api_name:
+                  type: string
+                  enum:
+                  - skywalker
+                  - hutt
+                  - palpatine
+                  - vader
+                  - mysterio
+                  description: Model API name
+              required:
+              - file
+              - model_api_name
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: Result file
+                  format: binary
+                model_api_name:
+                  type: string
+                  enum:
+                  - skywalker
+                  - hutt
+                  - palpatine
+                  - vader
+                  - mysterio
+                  description: Model API name
+              required:
+              - file
+              - model_api_name
+  /data/results/{exec_order_id}/download:
+    parameters:
+    - name: exec_order_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: data_results_download_list
+      description: Download result file
+      parameters:
+      - name: exec_order_id
+        in: path
+        description: Id of order
+        required: true
+        schema:
+          type: string
+      - name: result_type
+        in: query
+        description: Type of result file
+        required: true
+        schema:
+          type: string
+          enum:
+          - SUMMARY_SUPERSET
+          - SUMMARY_CHROMS
+          - DETAILED_SUPERSET
+          - DETAILED_CHROMS
+          - PDF_REPORT
+          - PRS_JSON_DATA
+          - PRS_IMAGES
+          - EXEC_ERRORS
+      - name: pdf_request_id
+        in: query
+        description: PDF request id
+        required: false
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+        '200':
+          description: Result file stream
+      tags:
+      - data
+  /data/results/{exec_order_id}/json:
+    parameters:
+    - name: exec_order_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: data_results_json_list
+      description: Get result as json
+      parameters:
+      - name: exec_order_id
+        in: path
+        description: Id of order
+        required: true
+        schema:
+          type: string
+      - name: result_type
+        in: query
+        description: Type of result file
+        required: true
+        schema:
+          type: string
+          enum:
+          - SUMMARY_CHROMS
+          - SUMMARY_SUPERSET
+          - DETAILED_CHROMS
+          - DETAILED_SUPERSET
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+        '200':
+          description: Result file stream
+      tags:
+      - data
+  /data/results/{exec_order_id}/pdf_report:
+    parameters:
+    - name: exec_order_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: data_results_pdf_report_list
+      description: Get pdf reports with pagination
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        schema:
+          type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      - name: exec_order_id
+        in: path
+        description: Search by id or order
+        required: true
+        schema:
+          type: string
+      - name: request_version
+        in: query
+        description: Search report request version
+        required: false
+        schema:
+          type: integer
+      - name: report_version
+        in: query
+        description: Search by report version
+        required: false
+        schema:
+          type: string
+      - name: sample_id
+        in: query
+        description: Search by sample id
+        required: false
+        schema:
+          type: string
+      - name: latest
+        in: query
+        description: Search by latest report request version
+        required: false
+        schema:
+          type: boolean
+      - name: report_type
+        in: query
+        description: Report type
+        required: true
+        schema:
+          type: string
+          enum:
+          - PRS_RUO_CARDIO
+          - PRS_RUO_CANCER
+          - PRS_CLINICAL_CARDIO
+          - PRS_CLINICAL_CANCER
+          - ANCESTRY
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '422':
+          description: unprocessable
+        '200':
+          description: Paginated entity list
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  previous:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  results:
+                    type: array
+                    items:
+                      required:
+                      - id
+                      type: object
+                      properties:
+                        id:
+                          title: Id
+                          type: string
+                          format: uuid
+                        status:
+                          title: Status
+                          type: string
+                          enum:
+                          - PENDING
+                          - COMPLETED
+                          - FAILED
+                          - QC_FAILED
+                        sample_id:
+                          title: Sample id
+                          type:
+                          - string
+                          - 'null'
+                          maxLength: 300
+                        order_id:
+                          title: Order id
+                          type: string
+                          readOnly: true
+                        result_id:
+                          title: Result id
+                          type: string
+                          readOnly: true
+                        org_name:
+                          title: Org name
+                          type: string
+                          readOnly: true
+                        report_type:
+                          title: Report type
+                          type: string
+                          enum:
+                          - ANCESTRY
+                          - PRS_RUO_CARDIO
+                          - PRS_RUO_CANCER
+                          - PRS_CLINICAL
+                          - PRS_CLINICAL_CARDIO
+                          - PRS_CLINICAL_CANCER
+                        request_type:
+                          title: Request type
+                          type: string
+                          enum:
+                          - ORDER
+                          - SAMPLE
+                        request_version:
+                          title: Request version
+                          type: integer
+                          maximum: 32767
+                          minimum: -32768
+                        report_version:
+                          title: Report version
+                          type:
+                          - string
+                          - 'null'
+                          maxLength: 300
+                        pdf_file_name:
+                          title: Pdf file name
+                          type:
+                          - string
+                          - 'null'
+                          maxLength: 260
+                        file_size_bytes:
+                          title: File size bytes
+                          type:
+                          - integer
+                          - 'null'
+                          maximum: 9223372036854775807
+                          minimum: -9223372036854775808
+                        check_sum:
+                          title: Check sum
+                          type:
+                          - string
+                          - 'null'
+                          maxLength: 128
+                          minLength: 1
+                        started_at:
+                          title: Started at
+                          type: string
+                          readOnly: true
+                        completed_at:
+                          title: Completed at
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        is_signed_by_deprecated_director:
+                          title: Is signed by deprecated director
+                          type: boolean
+                        notice:
+                          title: Notice
+                          type: string
+                          readOnly: true
+      tags:
+      - data
+  /data/results/{exec_order_id}/request_pdf:
+    parameters:
+    - name: exec_order_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: data_results_request_pdf_create
+      description: Request regenerate PDF report for order if reports are failed.
+      responses:
+        '400':
+          description: bad request
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '422':
+          description: unprocessable
+        '200':
+          description: Request PDF report for order_id
+      tags:
+      - data
+components:
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header

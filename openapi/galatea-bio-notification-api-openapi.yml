@@ -1,0 +1,178 @@
+openapi: 3.2.0
+info:
+  title: Octopod Notification API
+  version: v1
+servers:
+- url: https://api.galatea.bio/api/v1
+security:
+- Bearer: []
+tags:
+- name: notification
+paths:
+  /notification:
+    parameters: []
+    get:
+      operationId: notification_list
+      description: Get user notifications
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        schema:
+          type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      - name: watched
+        in: query
+        description: Show watched/unwatched notifications
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Notifications list
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  previous:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  results:
+                    type: array
+                    items:
+                      required:
+                      - message_type
+                      - message
+                      type: object
+                      properties:
+                        id:
+                          title: Id
+                          type: string
+                          format: uuid
+                          readOnly: true
+                        user_id:
+                          title: User id
+                          type: string
+                          readOnly: true
+                        type:
+                          title: Type
+                          type: string
+                          enum:
+                          - WEBSOCKET
+                          - SLACK
+                          - ALL
+                        message_type:
+                          title: Message type
+                          type: string
+                          enum:
+                          - plot_completed
+                          - plot_failed
+                          - upload_result_file_completed
+                          - upload_result_file_failed
+                          - order_execution_failed
+                          - critical_processing_error
+                          - monitoring_alert
+                          - send_webhook_failed
+                        message:
+                          title: Message
+                          type: string
+                        created_at:
+                          title: Created at
+                          type: string
+                          format: date-time
+                          readOnly: true
+                        watched:
+                          title: Watched
+                          type: boolean
+      tags:
+      - notification
+  /notification/watch:
+    parameters: []
+    put:
+      operationId: notification_watch_update
+      description: Watch notification
+      parameters:
+      - name: notification_id
+        in: query
+        description: Id of notification
+        required: false
+        schema:
+          type: string
+      - name: watch_all
+        in: query
+        description: Watch all notifications
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+        '200':
+          description: ok
+      tags:
+      - notification
+  /notification/webhook-actions:
+    parameters: []
+    get:
+      operationId: notification_webhook-actions_list
+      description: Get possible webhook actions
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Webhook actions list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                  - name
+                  - value
+                  type: object
+                  properties:
+                    name:
+                      title: Name
+                      type: string
+                      minLength: 1
+                    value:
+                      title: Value
+                      type: string
+                      minLength: 1
+      tags:
+      - notification
+components:
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header

@@ -1,0 +1,57 @@
+openapi: 3.2.0
+info:
+  title: Octopod Internal API
+  version: v1
+servers:
+- url: https://api.galatea.bio/api/v1
+security:
+- Bearer: []
+tags:
+- name: internal
+paths:
+  /internal/check_err:
+    parameters: []
+    get:
+      operationId: internal_check_err_list
+      description: ''
+      responses:
+        '200':
+          description: ''
+      tags:
+      - internal
+  /internal/health-check:
+    parameters: []
+    get:
+      operationId: internal_health-check_list
+      description: ''
+      responses:
+        '200':
+          description: ''
+      tags:
+      - internal
+  /internal/refresh_sfsc:
+    parameters: []
+    post:
+      operationId: internal_refresh_sfsc_create
+      description: ''
+      responses:
+        '201':
+          description: ''
+      tags:
+      - internal
+  /internal/status:
+    parameters: []
+    get:
+      operationId: internal_status_list
+      description: ''
+      responses:
+        '200':
+          description: ''
+      tags:
+      - internal
+components:
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header

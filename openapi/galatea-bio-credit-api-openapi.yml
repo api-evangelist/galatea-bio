@@ -1,0 +1,1833 @@
+openapi: 3.2.0
+info:
+  title: Octopod Credit API
+  version: v1
+servers:
+- url: https://api.galatea.bio/api/v1
+security:
+- Bearer: []
+tags:
+- name: credit
+paths:
+  /credit/balance:
+    parameters: []
+    get:
+      operationId: credit_balance_list
+      description: Get credit balances
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        schema:
+          type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      - name: orgs_ids
+        in: query
+        description: Ids of organizations
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Credit balances list
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  previous:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          title: Id
+                          type: string
+                          format: uuid
+                          readOnly: true
+                        org_id:
+                          title: Org id
+                          type: string
+                          readOnly: true
+                        balance:
+                          title: Balance
+                          type: string
+                          readOnly: true
+                        created_at:
+                          title: Created at
+                          type: string
+                          format: date-time
+                          readOnly: true
+                        updated_at:
+                          title: Updated at
+                          type: string
+                          format: date-time
+                          readOnly: true
+      tags:
+      - credit
+  /credit/exchange:
+    parameters: []
+    get:
+      operationId: credit_exchange_list
+      description: Get credit exchanges
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        schema:
+          type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      - name: orgs_ids
+        in: query
+        description: Ids of organizations
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Credit exchanges list
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  previous:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  results:
+                    type: array
+                    items:
+                      required:
+                      - credit_tariff
+                      type: object
+                      properties:
+                        id:
+                          title: Id
+                          type: string
+                          format: uuid
+                          readOnly: true
+                        credit_tariff:
+                          required:
+                          - credit_service
+                          type: object
+                          properties:
+                            id:
+                              title: Id
+                              type: string
+                              format: uuid
+                              readOnly: true
+                            credit_service:
+                              required:
+                              - type
+                              type: object
+                              properties:
+                                id:
+                                  title: Id
+                                  type: string
+                                  format: uuid
+                                  readOnly: true
+                                name:
+                                  title: Name
+                                  type: string
+                                  readOnly: true
+                                type:
+                                  title: Type
+                                  type: string
+                                  enum:
+                                  - EXECUTE_MODEL_WGS
+                                  - EXECUTE_MODEL_GNT
+                                  - REPLENISHMENT
+                                  - GENERATE_PDF_REPORT_ANCESTRY
+                                  - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+                                  - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+                                  - GENERATE_PDF_REPORT_PRS_CLINICAL
+                                  - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+                                  - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+                                named_model:
+                                  required:
+                                  - id
+                                  - model_name
+                                  type:
+                                  - object
+                                  - 'null'
+                                  properties:
+                                    id:
+                                      title: Id
+                                      type: string
+                                      format: uuid
+                                    model_name:
+                                      title: Model name
+                                      type: string
+                                      minLength: 1
+                                created_at:
+                                  title: Created at
+                                  type: string
+                                  format: date-time
+                                  readOnly: true
+                            org_id:
+                              title: Org id
+                              type: string
+                              readOnly: true
+                            price:
+                              title: Price
+                              type: string
+                              readOnly: true
+                            updated_at:
+                              title: Updated at
+                              type: string
+                              format: date-time
+                              readOnly: true
+                            created_at:
+                              title: Created at
+                              type: string
+                              format: date-time
+                              readOnly: true
+                        org_id:
+                          title: Org id
+                          type: string
+                          readOnly: true
+                        rate:
+                          title: Rate
+                          type: string
+                          readOnly: true
+                        currency_from:
+                          title: Currency from
+                          type: string
+                          readOnly: true
+                        updated_at:
+                          title: Updated at
+                          type: string
+                          format: date-time
+                          readOnly: true
+                        created_at:
+                          title: Created at
+                          type: string
+                          format: date-time
+                          readOnly: true
+      tags:
+      - credit
+    post:
+      operationId: credit_exchange_create
+      description: Create credit exchange
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '201':
+          description: New credit exchange
+          content:
+            application/json:
+              schema:
+                required:
+                - credit_tariff
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  credit_tariff:
+                    required:
+                    - credit_service
+                    type: object
+                    properties:
+                      id:
+                        title: Id
+                        type: string
+                        format: uuid
+                        readOnly: true
+                      credit_service:
+                        required:
+                        - type
+                        type: object
+                        properties:
+                          id:
+                            title: Id
+                            type: string
+                            format: uuid
+                            readOnly: true
+                          name:
+                            title: Name
+                            type: string
+                            readOnly: true
+                          type:
+                            title: Type
+                            type: string
+                            enum:
+                            - EXECUTE_MODEL_WGS
+                            - EXECUTE_MODEL_GNT
+                            - REPLENISHMENT
+                            - GENERATE_PDF_REPORT_ANCESTRY
+                            - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+                            - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+                            - GENERATE_PDF_REPORT_PRS_CLINICAL
+                            - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+                            - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+                          named_model:
+                            required:
+                            - id
+                            - model_name
+                            type:
+                            - object
+                            - 'null'
+                            properties:
+                              id:
+                                title: Id
+                                type: string
+                                format: uuid
+                              model_name:
+                                title: Model name
+                                type: string
+                                minLength: 1
+                          created_at:
+                            title: Created at
+                            type: string
+                            format: date-time
+                            readOnly: true
+                      org_id:
+                        title: Org id
+                        type: string
+                        readOnly: true
+                      price:
+                        title: Price
+                        type: string
+                        readOnly: true
+                      updated_at:
+                        title: Updated at
+                        type: string
+                        format: date-time
+                        readOnly: true
+                      created_at:
+                        title: Created at
+                        type: string
+                        format: date-time
+                        readOnly: true
+                  org_id:
+                    title: Org id
+                    type: string
+                    readOnly: true
+                  rate:
+                    title: Rate
+                    type: string
+                    readOnly: true
+                  currency_from:
+                    title: Currency from
+                    type: string
+                    readOnly: true
+                  updated_at:
+                    title: Updated at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+      tags:
+      - credit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - org_id
+              - price
+              - rate
+              - currency_from
+              type: object
+              properties:
+                org_id:
+                  title: Org id
+                  type: string
+                  format: uuid
+                price:
+                  title: Price
+                  type: integer
+                rate:
+                  title: Rate
+                  type: number
+                currency_from:
+                  title: Currency from
+                  type: string
+                  minLength: 1
+        required: true
+  /credit/exchange/{credit_exchange_id}:
+    parameters:
+    - name: credit_exchange_id
+      in: path
+      required: true
+      schema:
+        type: string
+    put:
+      operationId: credit_exchange_update
+      description: Edit credit exchange
+      parameters:
+      - name: credit_exchange_id
+        in: path
+        description: Id of credit exchange
+        required: true
+        schema:
+          type: string
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '200':
+          description: Updated credit exchange
+          content:
+            application/json:
+              schema:
+                required:
+                - credit_tariff
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  credit_tariff:
+                    required:
+                    - credit_service
+                    type: object
+                    properties:
+                      id:
+                        title: Id
+                        type: string
+                        format: uuid
+                        readOnly: true
+                      credit_service:
+                        required:
+                        - type
+                        type: object
+                        properties:
+                          id:
+                            title: Id
+                            type: string
+                            format: uuid
+                            readOnly: true
+                          name:
+                            title: Name
+                            type: string
+                            readOnly: true
+                          type:
+                            title: Type
+                            type: string
+                            enum:
+                            - EXECUTE_MODEL_WGS
+                            - EXECUTE_MODEL_GNT
+                            - REPLENISHMENT
+                            - GENERATE_PDF_REPORT_ANCESTRY
+                            - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+                            - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+                            - GENERATE_PDF_REPORT_PRS_CLINICAL
+                            - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+                            - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+                          named_model:
+                            required:
+                            - id
+                            - model_name
+                            type:
+                            - object
+                            - 'null'
+                            properties:
+                              id:
+                                title: Id
+                                type: string
+                                format: uuid
+                              model_name:
+                                title: Model name
+                                type: string
+                                minLength: 1
+                          created_at:
+                            title: Created at
+                            type: string
+                            format: date-time
+                            readOnly: true
+                      org_id:
+                        title: Org id
+                        type: string
+                        readOnly: true
+                      price:
+                        title: Price
+                        type: string
+                        readOnly: true
+                      updated_at:
+                        title: Updated at
+                        type: string
+                        format: date-time
+                        readOnly: true
+                      created_at:
+                        title: Created at
+                        type: string
+                        format: date-time
+                        readOnly: true
+                  org_id:
+                    title: Org id
+                    type: string
+                    readOnly: true
+                  rate:
+                    title: Rate
+                    type: string
+                    readOnly: true
+                  currency_from:
+                    title: Currency from
+                    type: string
+                    readOnly: true
+                  updated_at:
+                    title: Updated at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+      tags:
+      - credit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - rate
+              - price
+              - currency_from
+              type: object
+              properties:
+                rate:
+                  title: Rate
+                  type: number
+                price:
+                  title: Price
+                  type: integer
+                currency_from:
+                  title: Currency from
+                  type: string
+                  minLength: 1
+        required: true
+    delete:
+      operationId: credit_exchange_delete
+      description: Delete credit exchange
+      parameters:
+      - name: credit_exchange_id
+        in: path
+        description: Id of credit exchange
+        required: true
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+        '200':
+          description: ok
+      tags:
+      - credit
+  /credit/ledger:
+    parameters: []
+    get:
+      operationId: credit_ledger_list
+      description: Get credit ledger
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        schema:
+          type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      - name: orgs_ids
+        in: query
+        description: Search by ids of organizations
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: order_id
+        in: query
+        description: Search by order id
+        required: false
+        schema:
+          type: string
+      - name: credit_service_types
+        in: query
+        description: Search by credit service type
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - EXECUTE_MODEL_WGS
+            - EXECUTE_MODEL_GNT
+            - REPLENISHMENT
+            - GENERATE_PDF_REPORT_ANCESTRY
+            - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+            - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+            - GENERATE_PDF_REPORT_PRS_CLINICAL
+            - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+            - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+      - name: model_api_names
+        in: query
+        description: Search by model api name
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - skywalker
+            - hutt
+            - palpatine
+            - vader
+            - mysterio
+      - name: min_date
+        in: query
+        description: Search by date range
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: max_date
+        in: query
+        description: Search by date range
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: show_full
+        in: query
+        description: Show full ledger
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Credit ledger
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  previous:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  results:
+                    type: array
+                    items:
+                      required:
+                      - id
+                      - name
+                      - transaction_id
+                      - order_id
+                      - status
+                      - type
+                      - comment
+                      - json_comment
+                      - org_id
+                      - amount
+                      - balance_from
+                      - balance_to
+                      - created_at
+                      type: object
+                      properties:
+                        id:
+                          title: Id
+                          type: string
+                          format: uuid
+                        name:
+                          title: Name
+                          type: string
+                          minLength: 1
+                        transaction_id:
+                          title: Transaction id
+                          type: string
+                          format: uuid
+                        order_id:
+                          title: Order id
+                          type: string
+                          format: uuid
+                        status:
+                          title: Status
+                          type: string
+                          minLength: 1
+                        type:
+                          title: Type
+                          type: string
+                          minLength: 1
+                        comment:
+                          title: Comment
+                          type: string
+                          minLength: 1
+                        json_comment:
+                          title: Json comment
+                          type: object
+                          additionalProperties:
+                            type:
+                            - string
+                            - 'null'
+                        org_id:
+                          title: Org id
+                          type: string
+                          format: uuid
+                        amount:
+                          title: Amount
+                          type: integer
+                        balance_from:
+                          title: Balance from
+                          type: integer
+                        balance_to:
+                          title: Balance to
+                          type: integer
+                        created_at:
+                          title: Created at
+                          type: string
+                          format: date-time
+      tags:
+      - credit
+  /credit/quickbooks_auth:
+    parameters: []
+    get:
+      operationId: credit_quickbooks_auth_list
+      description: ''
+      responses:
+        '200':
+          description: ''
+      tags:
+      - credit
+  /credit/quickbooks_webhook:
+    parameters: []
+    post:
+      operationId: credit_quickbooks_webhook_create
+      description: ''
+      responses:
+        '201':
+          description: ''
+      tags:
+      - credit
+  /credit/replenish:
+    parameters: []
+    post:
+      operationId: credit_replenish_create
+      description: Replenish credits for organization
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '200':
+          description: Organization credit balance
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  org_id:
+                    title: Org id
+                    type: string
+                    readOnly: true
+                  balance:
+                    title: Balance
+                    type: string
+                    readOnly: true
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  updated_at:
+                    title: Updated at
+                    type: string
+                    format: date-time
+                    readOnly: true
+      tags:
+      - credit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - org_id
+              - amount
+              type: object
+              properties:
+                org_id:
+                  title: Org id
+                  type: string
+                  format: uuid
+                amount:
+                  title: Amount
+                  type: integer
+        required: true
+  /credit/service:
+    parameters: []
+    get:
+      operationId: credit_service_list
+      description: Get credit services
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        schema:
+          type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      - name: model_api_names
+        in: query
+        description: Search by model api name
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - skywalker
+            - hutt
+            - palpatine
+            - vader
+            - mysterio
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Credit services list
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  previous:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  results:
+                    type: array
+                    items:
+                      required:
+                      - type
+                      type: object
+                      properties:
+                        id:
+                          title: Id
+                          type: string
+                          format: uuid
+                          readOnly: true
+                        name:
+                          title: Name
+                          type: string
+                          readOnly: true
+                        type:
+                          title: Type
+                          type: string
+                          enum:
+                          - EXECUTE_MODEL_WGS
+                          - EXECUTE_MODEL_GNT
+                          - REPLENISHMENT
+                          - GENERATE_PDF_REPORT_ANCESTRY
+                          - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+                          - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+                          - GENERATE_PDF_REPORT_PRS_CLINICAL
+                          - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+                          - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+                        named_model:
+                          required:
+                          - id
+                          - model_name
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            id:
+                              title: Id
+                              type: string
+                              format: uuid
+                            model_name:
+                              title: Model name
+                              type: string
+                              minLength: 1
+                        created_at:
+                          title: Created at
+                          type: string
+                          format: date-time
+                          readOnly: true
+      tags:
+      - credit
+    post:
+      operationId: credit_service_create
+      description: Create credit service
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '201':
+          description: New credit service
+          content:
+            application/json:
+              schema:
+                required:
+                - type
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  name:
+                    title: Name
+                    type: string
+                    readOnly: true
+                  type:
+                    title: Type
+                    type: string
+                    enum:
+                    - EXECUTE_MODEL_WGS
+                    - EXECUTE_MODEL_GNT
+                    - REPLENISHMENT
+                    - GENERATE_PDF_REPORT_ANCESTRY
+                    - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+                    - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+                    - GENERATE_PDF_REPORT_PRS_CLINICAL
+                    - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+                    - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+                  named_model:
+                    required:
+                    - id
+                    - model_name
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        title: Id
+                        type: string
+                        format: uuid
+                      model_name:
+                        title: Model name
+                        type: string
+                        minLength: 1
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+      tags:
+      - credit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - type
+              type: object
+              properties:
+                named_model_id:
+                  title: Named model id
+                  type:
+                  - string
+                  - 'null'
+                  format: uuid
+                type:
+                  title: Type
+                  type: string
+                  enum:
+                  - EXECUTE_MODEL_WGS
+                  - EXECUTE_MODEL_GNT
+                  - REPLENISHMENT
+                  - GENERATE_PDF_REPORT_ANCESTRY
+                  - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+                  - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+                  - GENERATE_PDF_REPORT_PRS_CLINICAL
+                  - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+                  - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+        required: true
+  /credit/service/{credit_service_id}:
+    parameters:
+    - name: credit_service_id
+      in: path
+      required: true
+      schema:
+        type: string
+    delete:
+      operationId: credit_service_delete
+      description: Delete credit service
+      parameters:
+      - name: credit_service_id
+        in: path
+        description: Id of credit service
+        required: true
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+        '200':
+          description: ok
+      tags:
+      - credit
+  /credit/tariff:
+    parameters: []
+    get:
+      operationId: credit_tariff_list
+      description: Get credit tariffs
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        schema:
+          type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      - name: orgs_ids
+        in: query
+        description: Ids of organizations
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: credit_service_types
+        in: query
+        description: Search by credit service type
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - EXECUTE_MODEL_WGS
+            - EXECUTE_MODEL_GNT
+            - REPLENISHMENT
+            - GENERATE_PDF_REPORT_ANCESTRY
+            - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+            - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+            - GENERATE_PDF_REPORT_PRS_CLINICAL
+            - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+            - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+      - name: model_api_names
+        in: query
+        description: Search by model api name
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - skywalker
+            - hutt
+            - palpatine
+            - vader
+            - mysterio
+      - name: named_models
+        in: query
+        description: Search by named models
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Credit tariffs list
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  previous:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  results:
+                    type: array
+                    items:
+                      required:
+                      - credit_service
+                      type: object
+                      properties:
+                        id:
+                          title: Id
+                          type: string
+                          format: uuid
+                          readOnly: true
+                        credit_service:
+                          required:
+                          - type
+                          type: object
+                          properties:
+                            id:
+                              title: Id
+                              type: string
+                              format: uuid
+                              readOnly: true
+                            name:
+                              title: Name
+                              type: string
+                              readOnly: true
+                            type:
+                              title: Type
+                              type: string
+                              enum:
+                              - EXECUTE_MODEL_WGS
+                              - EXECUTE_MODEL_GNT
+                              - REPLENISHMENT
+                              - GENERATE_PDF_REPORT_ANCESTRY
+                              - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+                              - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+                              - GENERATE_PDF_REPORT_PRS_CLINICAL
+                              - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+                              - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+                            named_model:
+                              required:
+                              - id
+                              - model_name
+                              type:
+                              - object
+                              - 'null'
+                              properties:
+                                id:
+                                  title: Id
+                                  type: string
+                                  format: uuid
+                                model_name:
+                                  title: Model name
+                                  type: string
+                                  minLength: 1
+                            created_at:
+                              title: Created at
+                              type: string
+                              format: date-time
+                              readOnly: true
+                        org_id:
+                          title: Org id
+                          type: string
+                          readOnly: true
+                        price:
+                          title: Price
+                          type: string
+                          readOnly: true
+                        updated_at:
+                          title: Updated at
+                          type: string
+                          format: date-time
+                          readOnly: true
+                        created_at:
+                          title: Created at
+                          type: string
+                          format: date-time
+                          readOnly: true
+      tags:
+      - credit
+    post:
+      operationId: credit_tariff_create
+      description: Create credit tariff
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '201':
+          description: New credit service
+          content:
+            application/json:
+              schema:
+                required:
+                - credit_service
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  credit_service:
+                    required:
+                    - type
+                    type: object
+                    properties:
+                      id:
+                        title: Id
+                        type: string
+                        format: uuid
+                        readOnly: true
+                      name:
+                        title: Name
+                        type: string
+                        readOnly: true
+                      type:
+                        title: Type
+                        type: string
+                        enum:
+                        - EXECUTE_MODEL_WGS
+                        - EXECUTE_MODEL_GNT
+                        - REPLENISHMENT
+                        - GENERATE_PDF_REPORT_ANCESTRY
+                        - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+                        - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+                        - GENERATE_PDF_REPORT_PRS_CLINICAL
+                        - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+                        - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+                      named_model:
+                        required:
+                        - id
+                        - model_name
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          id:
+                            title: Id
+                            type: string
+                            format: uuid
+                          model_name:
+                            title: Model name
+                            type: string
+                            minLength: 1
+                      created_at:
+                        title: Created at
+                        type: string
+                        format: date-time
+                        readOnly: true
+                  org_id:
+                    title: Org id
+                    type: string
+                    readOnly: true
+                  price:
+                    title: Price
+                    type: string
+                    readOnly: true
+                  updated_at:
+                    title: Updated at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+      tags:
+      - credit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - org_id
+              - credit_service_id
+              - price
+              type: object
+              properties:
+                org_id:
+                  title: Org id
+                  type: string
+                  format: uuid
+                credit_service_id:
+                  title: Credit service id
+                  type: string
+                  format: uuid
+                price:
+                  title: Price
+                  type: integer
+        required: true
+  /credit/tariff/{credit_tariff_id}:
+    parameters:
+    - name: credit_tariff_id
+      in: path
+      required: true
+      schema:
+        type: string
+    put:
+      operationId: credit_tariff_update
+      description: Edit credit tariff
+      parameters:
+      - name: credit_tariff_id
+        in: path
+        description: Id of credit tariff
+        required: true
+        schema:
+          type: string
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '200':
+          description: Updated credit tariff
+          content:
+            application/json:
+              schema:
+                required:
+                - credit_service
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  credit_service:
+                    required:
+                    - type
+                    type: object
+                    properties:
+                      id:
+                        title: Id
+                        type: string
+                        format: uuid
+                        readOnly: true
+                      name:
+                        title: Name
+                        type: string
+                        readOnly: true
+                      type:
+                        title: Type
+                        type: string
+                        enum:
+                        - EXECUTE_MODEL_WGS
+                        - EXECUTE_MODEL_GNT
+                        - REPLENISHMENT
+                        - GENERATE_PDF_REPORT_ANCESTRY
+                        - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+                        - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+                        - GENERATE_PDF_REPORT_PRS_CLINICAL
+                        - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+                        - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+                      named_model:
+                        required:
+                        - id
+                        - model_name
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          id:
+                            title: Id
+                            type: string
+                            format: uuid
+                          model_name:
+                            title: Model name
+                            type: string
+                            minLength: 1
+                      created_at:
+                        title: Created at
+                        type: string
+                        format: date-time
+                        readOnly: true
+                  org_id:
+                    title: Org id
+                    type: string
+                    readOnly: true
+                  price:
+                    title: Price
+                    type: string
+                    readOnly: true
+                  updated_at:
+                    title: Updated at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+      tags:
+      - credit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - price
+              type: object
+              properties:
+                price:
+                  title: Price
+                  type: integer
+        required: true
+    delete:
+      operationId: credit_tariff_delete
+      description: Delete credit tariff
+      parameters:
+      - name: credit_tariff_id
+        in: path
+        description: Id of credit tariff
+        required: true
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+        '200':
+          description: ok
+      tags:
+      - credit
+  /credit/template:
+    parameters: []
+    get:
+      operationId: credit_template_list
+      description: Get credit templates
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        schema:
+          type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      - name: orgs_ids
+        in: query
+        description: Ids of organizations
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: credit_service_types
+        in: query
+        description: Search by credit service type
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - EXECUTE_MODEL_WGS
+            - EXECUTE_MODEL_GNT
+            - REPLENISHMENT
+            - GENERATE_PDF_REPORT_ANCESTRY
+            - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+            - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+            - GENERATE_PDF_REPORT_PRS_CLINICAL
+            - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+            - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+      - name: model_api_names
+        in: query
+        description: Search by model api name
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - skywalker
+            - hutt
+            - palpatine
+            - vader
+            - mysterio
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Credit tariffs list
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  previous:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  results:
+                    type: array
+                    items:
+                      required:
+                      - model_api_name
+                      - type
+                      type: object
+                      properties:
+                        id:
+                          title: Id
+                          type: string
+                          format: uuid
+                          readOnly: true
+                        model_api_name:
+                          title: Model api name
+                          type: string
+                          enum:
+                          - skywalker
+                          - hutt
+                          - palpatine
+                          - vader
+                          - mysterio
+                          - check_source
+                        org_id:
+                          title: Org id
+                          type: string
+                          readOnly: true
+                        type:
+                          title: Type
+                          type: string
+                          enum:
+                          - EXECUTE_MODEL_WGS
+                          - EXECUTE_MODEL_GNT
+                          - REPLENISHMENT
+                          - GENERATE_PDF_REPORT_ANCESTRY
+                          - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+                          - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+                          - GENERATE_PDF_REPORT_PRS_CLINICAL
+                          - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+                          - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+                        price:
+                          title: Price
+                          type: string
+                          readOnly: true
+                        updated_at:
+                          title: Updated at
+                          type: string
+                          format: date-time
+                          readOnly: true
+                        created_at:
+                          title: Created at
+                          type: string
+                          format: date-time
+                          readOnly: true
+      tags:
+      - credit
+  /credit/template/{credit_template_id}:
+    parameters:
+    - name: credit_template_id
+      in: path
+      required: true
+      schema:
+        type: string
+    put:
+      operationId: credit_template_update
+      description: Edit credit template
+      parameters:
+      - name: credit_template_id
+        in: path
+        description: Id of credit template
+        required: true
+        schema:
+          type: string
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '200':
+          description: Updated credit template
+          content:
+            application/json:
+              schema:
+                required:
+                - model_api_name
+                - type
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  model_api_name:
+                    title: Model api name
+                    type: string
+                    enum:
+                    - skywalker
+                    - hutt
+                    - palpatine
+                    - vader
+                    - mysterio
+                    - check_source
+                  org_id:
+                    title: Org id
+                    type: string
+                    readOnly: true
+                  type:
+                    title: Type
+                    type: string
+                    enum:
+                    - EXECUTE_MODEL_WGS
+                    - EXECUTE_MODEL_GNT
+                    - REPLENISHMENT
+                    - GENERATE_PDF_REPORT_ANCESTRY
+                    - GENERATE_PDF_REPORT_PRS_RUO_CARDIO
+                    - GENERATE_PDF_REPORT_PRS_RUO_CANCER
+                    - GENERATE_PDF_REPORT_PRS_CLINICAL
+                    - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
+                    - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
+                  price:
+                    title: Price
+                    type: string
+                    readOnly: true
+                  updated_at:
+                    title: Updated at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+      tags:
+      - credit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - price
+              type: object
+              properties:
+                price:
+                  title: Price
+                  type: integer
+        required: true
+  /credit/write_off:
+    parameters: []
+    post:
+      operationId: credit_write_off_create
+      description: Write off credits for organization
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '200':
+          description: Organization credit balance
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  org_id:
+                    title: Org id
+                    type: string
+                    readOnly: true
+                  balance:
+                    title: Balance
+                    type: string
+                    readOnly: true
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  updated_at:
+                    title: Updated at
+                    type: string
+                    format: date-time
+                    readOnly: true
+      tags:
+      - credit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - org_id
+              - amount
+              type: object
+              properties:
+                org_id:
+                  title: Org id
+                  type: string
+                  format: uuid
+                amount:
+                  title: Amount
+                  type: integer
+        required: true
+components:
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header

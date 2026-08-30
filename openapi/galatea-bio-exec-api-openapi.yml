@@ -1,0 +1,1684 @@
+openapi: 3.2.0
+info:
+  title: Octopod Exec API
+  version: v1
+servers:
+- url: https://api.galatea.bio/api/v1
+security:
+- Bearer: []
+tags:
+- name: exec
+paths:
+  /exec/cancel:
+    parameters: []
+    post:
+      operationId: exec_cancel_create
+      description: Cancel model execution which is in queue
+      responses:
+        '400':
+          description: '{"detail": "Bad request"}'
+        '401':
+          description: '{"detail": "Unauthorized request"}'
+        '403':
+          description: '{"detail": "Forbidden"}'
+        '200':
+          description: '{"detail": "Request to cancel execution id UUID accepted"}'
+      tags:
+      - exec
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order_id:
+                  description: Execution order ID
+                  type: string
+              in: body
+        required: true
+  /exec/model:
+    parameters: []
+    get:
+      operationId: exec_model_list
+      description: Get Execution models list
+      parameters:
+      - name: model_id
+        in: query
+        description: Model ID for search
+        required: false
+        schema:
+          type: string
+      - name: image_tag
+        in: query
+        description: Search by image tag
+        required: false
+        schema:
+          type: string
+      - name: model_api_names
+        in: query
+        description: Search by model api name
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - skywalker
+            - hutt
+            - palpatine
+            - vader
+            - mysterio
+      - name: named_models
+        in: query
+        description: Search by named models
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: is_sandbox
+        in: query
+        description: Search for sandbox models
+        required: false
+        schema:
+          type: boolean
+      - name: push_date
+        in: query
+        description: Search by push date
+        required: false
+        example: '2025-01-25'
+        schema:
+          type: string
+          format: date
+      - name: clinical_validated
+        in: query
+        description: Search for clinical validated models
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Execution models list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                  - model_api_name
+                  type: object
+                  properties:
+                    id:
+                      title: Id
+                      type: string
+                      format: uuid
+                      readOnly: true
+                    image_tag:
+                      title: Image tag
+                      type: string
+                      readOnly: true
+                    full_image_tag:
+                      title: Full image tag
+                      type: string
+                      readOnly: true
+                    model_api_name:
+                      title: Model api name
+                      type: string
+                      enum:
+                      - skywalker
+                      - hutt
+                      - palpatine
+                      - vader
+                      - mysterio
+                      - check_source
+                    image_pushed_at:
+                      title: Image pushed at
+                      type:
+                      - string
+                      - 'null'
+                      format: date-time
+                    image_digest:
+                      title: Image digest
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 300
+                    created_at:
+                      title: Created at
+                      type: string
+                      format: date-time
+                      readOnly: true
+                    assigned_name:
+                      title: Assigned name
+                      type: string
+                      readOnly: true
+                    git_commit:
+                      title: Git commit
+                      type: string
+                      readOnly: true
+                    clinical_validated:
+                      title: Clinical validated
+                      type: boolean
+                    validated_at:
+                      title: Validated at
+                      type:
+                      - string
+                      - 'null'
+                      format: date-time
+                    validated_by:
+                      title: Validated by
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 50
+                    description:
+                      title: Description
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 500
+                    execution_results:
+                      title: Execution results
+                      type: string
+                      readOnly: true
+                    post_execution_results:
+                      title: Post execution results
+                      type: string
+                      readOnly: true
+                    is_sandbox:
+                      title: Is sandbox
+                      type: boolean
+      tags:
+      - exec
+    post:
+      operationId: exec_model_create
+      description: Create model
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '201':
+          description: New model
+          content:
+            application/json:
+              schema:
+                required:
+                - model_api_name
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  image_tag:
+                    title: Image tag
+                    type: string
+                    readOnly: true
+                  full_image_tag:
+                    title: Full image tag
+                    type: string
+                    readOnly: true
+                  model_api_name:
+                    title: Model api name
+                    type: string
+                    enum:
+                    - skywalker
+                    - hutt
+                    - palpatine
+                    - vader
+                    - mysterio
+                    - check_source
+                  image_pushed_at:
+                    title: Image pushed at
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  image_digest:
+                    title: Image digest
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 300
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  assigned_name:
+                    title: Assigned name
+                    type: string
+                    readOnly: true
+                  git_commit:
+                    title: Git commit
+                    type: string
+                    readOnly: true
+                  clinical_validated:
+                    title: Clinical validated
+                    type: boolean
+                  validated_at:
+                    title: Validated at
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  validated_by:
+                    title: Validated by
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 50
+                  description:
+                    title: Description
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 500
+                  execution_results:
+                    title: Execution results
+                    type: string
+                    readOnly: true
+                  post_execution_results:
+                    title: Post execution results
+                    type: string
+                    readOnly: true
+                  is_sandbox:
+                    title: Is sandbox
+                    type: boolean
+      tags:
+      - exec
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - ecr_image_id
+              - model_api_name
+              type: object
+              properties:
+                ecr_image_id:
+                  title: Ecr image id
+                  type: string
+                  format: uuid
+                model_api_name:
+                  title: Model api name
+                  type: string
+                  enum:
+                  - skywalker
+                  - hutt
+                  - palpatine
+                  - vader
+                  - mysterio
+                  - check_source
+                description:
+                  title: Description
+                  type: string
+                  minLength: 1
+        required: true
+  /exec/model/api:
+    parameters: []
+    get:
+      operationId: exec_model_api_list
+      description: Get model's API
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Model's API list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                  - label
+                  - value
+                  - execution_results
+                  type: object
+                  properties:
+                    label:
+                      title: Label
+                      type: string
+                      minLength: 1
+                    value:
+                      title: Value
+                      type: string
+                      minLength: 1
+                    execution_results:
+                      title: Execution results
+                      type: object
+                      additionalProperties:
+                        type:
+                        - string
+                        - 'null'
+      tags:
+      - exec
+  /exec/model/ecr:
+    parameters: []
+    get:
+      operationId: exec_model_ecr_list
+      description: Get ECR images
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: ECR images list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                  - image_registry
+                  - image_repository
+                  - image_tag
+                  - image_digest
+                  - image_pushed_at
+                  type: object
+                  properties:
+                    id:
+                      title: Id
+                      type: string
+                      format: uuid
+                      readOnly: true
+                    image_registry:
+                      title: Image registry
+                      type: string
+                      minLength: 1
+                    image_repository:
+                      title: Image repository
+                      type: string
+                      minLength: 1
+                    image_tag:
+                      title: Image tag
+                      type: string
+                      minLength: 1
+                    image_digest:
+                      title: Image digest
+                      type: string
+                      minLength: 1
+                    image_pushed_at:
+                      title: Image pushed at
+                      type: string
+                      format: date-time
+                    image_models:
+                      title: Image models
+                      type: string
+                      readOnly: true
+      tags:
+      - exec
+    post:
+      operationId: exec_model_ecr_create
+      description: Update ECR images list
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: ECR images list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                  - image_registry
+                  - image_repository
+                  - image_tag
+                  - image_digest
+                  - image_pushed_at
+                  type: object
+                  properties:
+                    id:
+                      title: Id
+                      type: string
+                      format: uuid
+                      readOnly: true
+                    image_registry:
+                      title: Image registry
+                      type: string
+                      minLength: 1
+                    image_repository:
+                      title: Image repository
+                      type: string
+                      minLength: 1
+                    image_tag:
+                      title: Image tag
+                      type: string
+                      minLength: 1
+                    image_digest:
+                      title: Image digest
+                      type: string
+                      minLength: 1
+                    image_pushed_at:
+                      title: Image pushed at
+                      type: string
+                      format: date-time
+                    image_models:
+                      title: Image models
+                      type: string
+                      readOnly: true
+      tags:
+      - exec
+  /exec/named_model:
+    parameters: []
+    get:
+      operationId: exec_named_model_list
+      description: Get named models
+      parameters:
+      - name: hide_deprecated
+        in: query
+        description: Hide deprecated models
+        required: false
+        schema:
+          type: boolean
+      - name: model_api_names
+        in: query
+        description: Search by model api name
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - skywalker
+            - hutt
+            - palpatine
+            - vader
+            - mysterio
+      - name: named_model
+        in: query
+        description: Search by model name
+        required: false
+        schema:
+          type: string
+      - name: exact_search
+        in: query
+        description: search by model name exactly
+        required: false
+        schema:
+          type: boolean
+      - name: image_tag
+        in: query
+        description: Search by image tag
+        required: false
+        schema:
+          type: string
+      - name: is_sandbox
+        in: query
+        description: Search for sandbox models
+        required: false
+        schema:
+          type: boolean
+      - name: clinical_validated
+        in: query
+        description: Search for clinical validated models
+        required: false
+        schema:
+          type: boolean
+      - name: enabled
+        in: query
+        description: Search for enabled models
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Named models list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                  - model_name
+                  type: object
+                  properties:
+                    id:
+                      title: Id
+                      type: string
+                      format: uuid
+                      readOnly: true
+                    model_id:
+                      title: Model id
+                      type: string
+                      readOnly: true
+                    model_name:
+                      title: Model name
+                      type: string
+                      maxLength: 100
+                      minLength: 1
+                    model_api_name:
+                      title: Model api name
+                      type: string
+                      readOnly: true
+                    model_image_tag:
+                      title: Model image tag
+                      type: string
+                      readOnly: true
+                    deprecated:
+                      title: Deprecated
+                      type: boolean
+                    clinical_validated:
+                      title: Clinical validated
+                      type: boolean
+                    validated_at:
+                      title: Validated at
+                      type:
+                      - string
+                      - 'null'
+                      format: date-time
+                    validated_by:
+                      title: Validated by
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 50
+                      minLength: 1
+                    enabled:
+                      title: Enabled
+                      type: boolean
+                    execution_results:
+                      title: Execution results
+                      type: string
+                      readOnly: true
+                    post_execution_results:
+                      title: Post execution results
+                      type: string
+                      readOnly: true
+                    used_in_orgs:
+                      title: Used in orgs
+                      type: string
+                      readOnly: true
+                    is_sandbox:
+                      title: Is sandbox
+                      type: string
+                      readOnly: true
+                    comment:
+                      title: Comment
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 1000
+                      minLength: 1
+      tags:
+      - exec
+    post:
+      operationId: exec_named_model_create
+      description: Create named model
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '201':
+          description: New named model
+          content:
+            application/json:
+              schema:
+                required:
+                - model_name
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  model_id:
+                    title: Model id
+                    type: string
+                    readOnly: true
+                  model_name:
+                    title: Model name
+                    type: string
+                    maxLength: 100
+                    minLength: 1
+                  model_api_name:
+                    title: Model api name
+                    type: string
+                    readOnly: true
+                  model_image_tag:
+                    title: Model image tag
+                    type: string
+                    readOnly: true
+                  deprecated:
+                    title: Deprecated
+                    type: boolean
+                  clinical_validated:
+                    title: Clinical validated
+                    type: boolean
+                  validated_at:
+                    title: Validated at
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  validated_by:
+                    title: Validated by
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 50
+                    minLength: 1
+                  enabled:
+                    title: Enabled
+                    type: boolean
+                  execution_results:
+                    title: Execution results
+                    type: string
+                    readOnly: true
+                  post_execution_results:
+                    title: Post execution results
+                    type: string
+                    readOnly: true
+                  used_in_orgs:
+                    title: Used in orgs
+                    type: string
+                    readOnly: true
+                  is_sandbox:
+                    title: Is sandbox
+                    type: string
+                    readOnly: true
+                  comment:
+                    title: Comment
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 1000
+                    minLength: 1
+      tags:
+      - exec
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - model_name
+              - model_id
+              - execution_results
+              - post_execution_results
+              - enabled
+              type: object
+              properties:
+                model_name:
+                  title: Model name
+                  type: string
+                  minLength: 1
+                model_id:
+                  title: Model id
+                  type: string
+                  format: uuid
+                execution_results:
+                  type: object
+                  properties:
+                    result_sub_pop:
+                      title: Result sub pop
+                      type: boolean
+                    result_sub_pop_chrm:
+                      title: Result sub pop chrm
+                      type: boolean
+                    result_super_pop:
+                      title: Result super pop
+                      type: boolean
+                    result_super_pop_chrm:
+                      title: Result super pop chrm
+                      type: boolean
+                    result_svg_data:
+                      title: Result svg data
+                      type: boolean
+                    result_prs_data:
+                      title: Result prs data
+                      type: boolean
+                    result_prs_tech_data:
+                      title: Result prs tech data
+                      type: boolean
+                    result_prs_qc:
+                      title: Result prs qc
+                      type: boolean
+                post_execution_results:
+                  type: object
+                  properties:
+                    ancestry_pdf_report:
+                      title: Ancestry pdf report
+                      type: boolean
+                    prs_ruo_cardio_pdf_report:
+                      title: Prs ruo cardio pdf report
+                      type: boolean
+                    prs_ruo_cancer_pdf_report:
+                      title: Prs ruo cancer pdf report
+                      type: boolean
+                    prs_clinical_cardio_pdf_report:
+                      title: Prs clinical cardio pdf report
+                      type: boolean
+                    prs_clinical_cancer_pdf_report:
+                      title: Prs clinical cancer pdf report
+                      type: boolean
+                enabled:
+                  title: Enabled
+                  type: boolean
+                comment:
+                  title: Comment
+                  type:
+                  - string
+                  - 'null'
+                clinical_validated:
+                  title: Clinical validated
+                  type: boolean
+        required: true
+  /exec/named_model/{named_model_id}:
+    parameters:
+    - name: named_model_id
+      in: path
+      required: true
+      schema:
+        type: string
+    put:
+      operationId: exec_named_model_update
+      description: Edit named model
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '201':
+          description: Edit named model
+          content:
+            application/json:
+              schema:
+                required:
+                - model_name
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  model_id:
+                    title: Model id
+                    type: string
+                    readOnly: true
+                  model_name:
+                    title: Model name
+                    type: string
+                    maxLength: 100
+                    minLength: 1
+                  model_api_name:
+                    title: Model api name
+                    type: string
+                    readOnly: true
+                  model_image_tag:
+                    title: Model image tag
+                    type: string
+                    readOnly: true
+                  deprecated:
+                    title: Deprecated
+                    type: boolean
+                  clinical_validated:
+                    title: Clinical validated
+                    type: boolean
+                  validated_at:
+                    title: Validated at
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  validated_by:
+                    title: Validated by
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 50
+                    minLength: 1
+                  enabled:
+                    title: Enabled
+                    type: boolean
+                  execution_results:
+                    title: Execution results
+                    type: string
+                    readOnly: true
+                  post_execution_results:
+                    title: Post execution results
+                    type: string
+                    readOnly: true
+                  used_in_orgs:
+                    title: Used in orgs
+                    type: string
+                    readOnly: true
+                  is_sandbox:
+                    title: Is sandbox
+                    type: string
+                    readOnly: true
+                  comment:
+                    title: Comment
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 1000
+                    minLength: 1
+      tags:
+      - exec
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - model_name
+              - model_id
+              - execution_results
+              - post_execution_results
+              - enabled
+              type: object
+              properties:
+                model_name:
+                  title: Model name
+                  type: string
+                  minLength: 1
+                model_id:
+                  title: Model id
+                  type: string
+                  format: uuid
+                execution_results:
+                  type: object
+                  properties:
+                    result_sub_pop:
+                      title: Result sub pop
+                      type: boolean
+                    result_sub_pop_chrm:
+                      title: Result sub pop chrm
+                      type: boolean
+                    result_super_pop:
+                      title: Result super pop
+                      type: boolean
+                    result_super_pop_chrm:
+                      title: Result super pop chrm
+                      type: boolean
+                    result_svg_data:
+                      title: Result svg data
+                      type: boolean
+                    result_prs_data:
+                      title: Result prs data
+                      type: boolean
+                    result_prs_tech_data:
+                      title: Result prs tech data
+                      type: boolean
+                    result_prs_qc:
+                      title: Result prs qc
+                      type: boolean
+                post_execution_results:
+                  type: object
+                  properties:
+                    ancestry_pdf_report:
+                      title: Ancestry pdf report
+                      type: boolean
+                    prs_ruo_cardio_pdf_report:
+                      title: Prs ruo cardio pdf report
+                      type: boolean
+                    prs_ruo_cancer_pdf_report:
+                      title: Prs ruo cancer pdf report
+                      type: boolean
+                    prs_clinical_cardio_pdf_report:
+                      title: Prs clinical cardio pdf report
+                      type: boolean
+                    prs_clinical_cancer_pdf_report:
+                      title: Prs clinical cancer pdf report
+                      type: boolean
+                enabled:
+                  title: Enabled
+                  type: boolean
+                comment:
+                  title: Comment
+                  type:
+                  - string
+                  - 'null'
+                clinical_validated:
+                  title: Clinical validated
+                  type: boolean
+        required: true
+  /exec/named_model/{named_model_id}/history:
+    parameters:
+    - name: named_model_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: exec_named_model_history_list
+      description: Get named models
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Named models history list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                  - history_id
+                  - model_name
+                  type: object
+                  properties:
+                    id:
+                      title: Id
+                      type: string
+                      format: uuid
+                      readOnly: true
+                    history_id:
+                      title: History id
+                      type: integer
+                      maximum: 2147483647
+                      minimum: -2147483648
+                    model_id:
+                      title: Model id
+                      type: string
+                      format: uuid
+                      readOnly: true
+                    model_name:
+                      title: Model name
+                      type: string
+                      maxLength: 100
+                      minLength: 1
+                    model_api_name:
+                      title: Model api name
+                      type: string
+                      readOnly: true
+                    model_image_tag:
+                      title: Model image tag
+                      type: string
+                      readOnly: true
+                    deprecated:
+                      title: Deprecated
+                      type: boolean
+                    clinical_validated:
+                      title: Clinical validated
+                      type: boolean
+                    validated_at:
+                      title: Validated at
+                      type:
+                      - string
+                      - 'null'
+                      format: date-time
+                    validated_by:
+                      title: Validated by
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 50
+                      minLength: 1
+                    enabled:
+                      title: Enabled
+                      type: boolean
+                    execution_results:
+                      title: Execution results
+                      type:
+                      - string
+                      - 'null'
+                    post_execution_results:
+                      title: Post execution results
+                      type:
+                      - string
+                      - 'null'
+                    is_sandbox:
+                      title: Is sandbox
+                      type: string
+                      readOnly: true
+                    used_in_orgs:
+                      title: Used in orgs
+                      type: integer
+                      maximum: 2147483647
+                      minimum: -2147483648
+                    comment:
+                      title: Comment
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 1000
+                      minLength: 1
+      tags:
+      - exec
+  /exec/orders:
+    parameters: []
+    get:
+      operationId: exec_orders_list
+      description: Get execution boards with pagination
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        schema:
+          type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      - name: filter
+        in: query
+        description: Source File name or Source File ID or Order ID for search
+        required: false
+        schema:
+          type: string
+      - name: org_names
+        in: query
+        description: Search by organizations names
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: status
+        in: query
+        description: Search by order status
+        required: false
+        schema:
+          type: string
+          enum:
+          - Registered
+          - Preparing
+          - Submitted
+          - Running
+          - Model completed
+          - Completed
+          - Failed
+          - Canceled
+          - Canceling
+          - Making report
+          - Collecting report results
+          - Reports failed
+          - QC failed
+      - name: type
+        in: query
+        description: Search by source file type
+        required: false
+        schema:
+          type: string
+          enum:
+          - GNT
+          - WGS
+          - EXTERNAL
+      - name: tags_ids
+        in: query
+        description: Search by tags IDs
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: model_name
+        in: query
+        description: Search by model name
+        required: false
+        schema:
+          type: string
+      - name: model_api_name
+        in: query
+        description: Search by model api name
+        required: false
+        schema:
+          type: string
+      - name: min_date
+        in: query
+        description: Search by date range
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: max_date
+        in: query
+        description: Search by date range
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: status_group
+        in: query
+        description: Search by order status group
+        required: false
+        schema:
+          type: string
+          enum:
+          - initializing
+          - running
+          - completed
+          - failed
+      - name: orders_ids
+        in: query
+        description: List of Order IDs for search
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Paginated entity list
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  previous:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  results:
+                    type: array
+                    items:
+                      required:
+                      - id
+                      - started_at
+                      - can_request_pdf
+                      type: object
+                      properties:
+                        id:
+                          title: Id
+                          type: string
+                          format: uuid
+                        status:
+                          title: Status
+                          type: string
+                          readOnly: true
+                        src_file_id:
+                          title: Src file id
+                          type: string
+                          readOnly: true
+                        src_file_short_path:
+                          title: Src file short path
+                          type: string
+                          readOnly: true
+                        src_file_name:
+                          title: Src file name
+                          type: string
+                          readOnly: true
+                        started_at:
+                          title: Started at
+                          type: string
+                          format: date-time
+                        amount_of_samples:
+                          title: Amount of samples
+                          type: string
+                          readOnly: true
+                        execution_time:
+                          title: Execution time
+                          type: string
+                          readOnly: true
+                        submitted_by:
+                          title: Submitted by
+                          type: string
+                          readOnly: true
+                        model:
+                          title: Model
+                          type: string
+                          readOnly: true
+                        type:
+                          title: Type
+                          type: string
+                          readOnly: true
+                        org_name:
+                          title: Org name
+                          type: string
+                          readOnly: true
+                        tags:
+                          title: Tags
+                          type: string
+                          readOnly: true
+                        result_types:
+                          title: Result types
+                          type: string
+                          readOnly: true
+                        can_request_pdf:
+                          title: Can request pdf
+                          type: boolean
+                        virtual:
+                          title: Virtual
+                          type: boolean
+      tags:
+      - exec
+    post:
+      operationId: exec_orders_create
+      description: Submit model execution for source file
+      responses:
+        '400':
+          description: '{"detail": "Bad request"}'
+        '401':
+          description: '{"detail": "Unauthorized request"}'
+        '403':
+          description: '{"detail": "Forbidden"}'
+        '422':
+          description: '{"detail": "Request cannot be processed"}'
+        '201':
+          description: '[{"status": "Registered", "source_file_id": "uuid", "order_id": "uuid"}]'
+        '200':
+          description: '[{"status": "Registered", "source_file_id": "uuid", "order_id": "uuid"}]'
+      tags:
+      - exec
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - source_file_id
+              type: object
+              properties:
+                source_file_id:
+                  title: Source file id
+                  type: string
+                  format: uuid
+                model_name:
+                  title: Model name
+                  type: string
+                  minLength: 1
+                tags_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                pdf_metadata:
+                  title: Pdf metadata
+                  type: object
+                  additionalProperties:
+                    type: string
+                    minLength: 1
+                pdf_report_types:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                    minLength: 1
+        required: true
+  /exec/orders/{order_id}:
+    parameters:
+    - name: order_id
+      in: path
+      required: true
+      schema:
+        type: string
+    patch:
+      operationId: exec_orders_partial_update
+      description: Edit order's tags
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                required:
+                - id
+                - started_at
+                - can_request_pdf
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                  status:
+                    title: Status
+                    type: string
+                    readOnly: true
+                  src_file_id:
+                    title: Src file id
+                    type: string
+                    readOnly: true
+                  src_file_short_path:
+                    title: Src file short path
+                    type: string
+                    readOnly: true
+                  src_file_name:
+                    title: Src file name
+                    type: string
+                    readOnly: true
+                  started_at:
+                    title: Started at
+                    type: string
+                    format: date-time
+                  amount_of_samples:
+                    title: Amount of samples
+                    type: string
+                    readOnly: true
+                  execution_time:
+                    title: Execution time
+                    type: string
+                    readOnly: true
+                  submitted_by:
+                    title: Submitted by
+                    type: string
+                    readOnly: true
+                  model:
+                    title: Model
+                    type: string
+                    readOnly: true
+                  type:
+                    title: Type
+                    type: string
+                    readOnly: true
+                  org_name:
+                    title: Org name
+                    type: string
+                    readOnly: true
+                  tags:
+                    title: Tags
+                    type: string
+                    readOnly: true
+                  result_types:
+                    title: Result types
+                    type: string
+                    readOnly: true
+                  can_request_pdf:
+                    title: Can request pdf
+                    type: boolean
+                  virtual:
+                    title: Virtual
+                    type: boolean
+      tags:
+      - exec
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tags_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+        required: true
+  /exec/tags:
+    parameters: []
+    get:
+      operationId: exec_tags_list
+      description: Get execution tags with pagination
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        schema:
+          type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      - name: name
+        in: query
+        description: Tag name for search
+        required: false
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Paginated entity list
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  previous:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  results:
+                    type: array
+                    items:
+                      required:
+                      - id
+                      - name
+                      - org_id
+                      type: object
+                      properties:
+                        id:
+                          title: Id
+                          type: string
+                          format: uuid
+                        name:
+                          title: Name
+                          type: string
+                          minLength: 1
+                        org_id:
+                          title: Org id
+                          type: string
+                          format: uuid
+      tags:
+      - exec
+    post:
+      operationId: exec_tags_create
+      description: Create tag
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '201':
+          description: New tag
+          content:
+            application/json:
+              schema:
+                required:
+                - id
+                - name
+                - org_id
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                  name:
+                    title: Name
+                    type: string
+                    minLength: 1
+                  org_id:
+                    title: Org id
+                    type: string
+                    format: uuid
+      tags:
+      - exec
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - name
+              type: object
+              properties:
+                name:
+                  title: Name
+                  type: string
+                  minLength: 1
+        required: true
+  /exec/tags/{tag_id}:
+    parameters:
+    - name: tag_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: exec_tags_read
+      description: Tag details
+      responses:
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '200':
+          description: Tag details
+          content:
+            application/json:
+              schema:
+                required:
+                - id
+                - name
+                - org_id
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                  name:
+                    title: Name
+                    type: string
+                    minLength: 1
+                  org_id:
+                    title: Org id
+                    type: string
+                    format: uuid
+      tags:
+      - exec
+    put:
+      operationId: exec_tags_update
+      description: Edit tag
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '200':
+          description: Tag details
+          content:
+            application/json:
+              schema:
+                required:
+                - id
+                - name
+                - org_id
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                  name:
+                    title: Name
+                    type: string
+                    minLength: 1
+                  org_id:
+                    title: Org id
+                    type: string
+                    format: uuid
+      tags:
+      - exec
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - name
+              type: object
+              properties:
+                name:
+                  title: Name
+                  type: string
+                  minLength: 1
+        required: true
+    delete:
+      operationId: exec_tags_delete
+      description: Delete tag
+      responses:
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '200':
+          description: Success
+      tags:
+      - exec
+components:
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header

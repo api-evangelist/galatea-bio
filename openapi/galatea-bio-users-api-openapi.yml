@@ -1,0 +1,818 @@
+openapi: 3.2.0
+info:
+  title: Octopod Users API
+  version: v1
+servers:
+- url: https://api.galatea.bio/api/v1
+security:
+- Bearer: []
+tags:
+- name: users
+paths:
+  /users:
+    parameters: []
+    get:
+      operationId: users_list
+      description: Get organization's users with pagination
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        schema:
+          type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      - name: email
+        in: query
+        description: User email for search
+        required: false
+        schema:
+          type: string
+      - name: org_names
+        in: query
+        description: Search by organizations names
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: show_api_keys
+        in: query
+        description: Show only api_keys
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '200':
+          description: Paginated entity list
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  previous:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  results:
+                    type: array
+                    items:
+                      required:
+                      - id
+                      - email
+                      - first_name
+                      - last_name
+                      - created_at
+                      type: object
+                      properties:
+                        id:
+                          title: Id
+                          type: string
+                          format: uuid
+                        email:
+                          title: Email
+                          type: string
+                          minLength: 1
+                        first_name:
+                          title: First name
+                          type: string
+                          minLength: 1
+                        last_name:
+                          title: Last name
+                          type: string
+                          minLength: 1
+                        status:
+                          title: Status
+                          type: string
+                          readOnly: true
+                        created_at:
+                          title: Created at
+                          type: string
+                          format: date-time
+                        deleted_at:
+                          title: Deleted at
+                          type: string
+                          format: date-time
+                        role:
+                          title: Role
+                          type: string
+                          minLength: 1
+                        org_name:
+                          title: Org name
+                          type: string
+                          readOnly: true
+      tags:
+      - users
+    post:
+      operationId: users_create
+      description: Invite user
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '201':
+          description: New user
+          content:
+            application/json:
+              schema:
+                required:
+                - email
+                - role
+                type: object
+                properties:
+                  email:
+                    title: Email
+                    type: string
+                    format: email
+                    maxLength: 254
+                    minLength: 1
+                  first_name:
+                    title: First name
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 100
+                  last_name:
+                    title: Last name
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 100
+                  role:
+                    title: Role
+                    type: string
+                    enum:
+                    - SystemAdmin
+                    - OrgAdmin
+                    - OrgUser
+                    - InternalService
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  updated_at:
+                    title: Updated at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  status:
+                    title: Status
+                    type: string
+                    readOnly: true
+                  org_name:
+                    title: Org name
+                    type: string
+                    readOnly: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - email
+              type: object
+              properties:
+                email:
+                  title: Email
+                  type: string
+                  format: email
+                  minLength: 1
+                org_id:
+                  title: Org id
+                  type: string
+                  format: uuid
+                role:
+                  title: Role
+                  type: string
+                  enum:
+                  - SystemAdmin
+                  - OrgAdmin
+                  - OrgUser
+                  - InternalService
+        required: true
+  /users/activate:
+    parameters: []
+    post:
+      operationId: users_activate_create
+      description: Activate invited user
+      responses:
+        '406':
+          description: '{"detail": "Not acceptable request"}'
+        '202':
+          description: '{"detail": "Accepted"}'
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - code
+              - password
+              - first_name
+              - last_name
+              type: object
+              properties:
+                code:
+                  title: Code
+                  type: string
+                  minLength: 1
+                password:
+                  title: Password
+                  type: string
+                  minLength: 1
+                first_name:
+                  title: First name
+                  type: string
+                  minLength: 1
+                last_name:
+                  title: Last name
+                  type: string
+                  minLength: 1
+        required: true
+  /users/change-password:
+    parameters: []
+    post:
+      operationId: users_change-password_create
+      description: Change password
+      responses:
+        '401':
+          description: '{"detail": "Unauthorized"}'
+        '406':
+          description: '{"detail": "Not acceptable"}'
+        '202':
+          description: '{"detail": "Accepted"}'
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - current_password
+              - new_password
+              type: object
+              properties:
+                current_password:
+                  title: Current password
+                  type: string
+                  minLength: 1
+                new_password:
+                  title: New password
+                  type: string
+                  minLength: 1
+        required: true
+  /users/forgot-password:
+    parameters: []
+    post:
+      operationId: users_forgot-password_create
+      description: Forgot password
+      responses:
+        '406':
+          description: '{"detail": "Not acceptable"}'
+        '202':
+          description: '{"detail": "Accepted"}'
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - email
+              type: object
+              properties:
+                email:
+                  title: Email
+                  type: string
+                  format: email
+                  minLength: 1
+        required: true
+  /users/me:
+    parameters: []
+    get:
+      operationId: users_me_list
+      description: Current user details
+      responses:
+        '401':
+          description: '{"detail": "Unauthorized request"}'
+        '200':
+          description: Current user details
+          content:
+            application/json:
+              schema:
+                required:
+                - email
+                - role
+                - org
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  email:
+                    title: Email
+                    type: string
+                    format: email
+                    maxLength: 254
+                    minLength: 1
+                  first_name:
+                    title: First name
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 100
+                  last_name:
+                    title: Last name
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 100
+                  role:
+                    title: Role
+                    type: string
+                    enum:
+                    - SystemAdmin
+                    - OrgAdmin
+                    - OrgUser
+                    - InternalService
+                  is_active:
+                    title: Is active
+                    type: boolean
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  deleted_at:
+                    title: Deleted at
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  updated_at:
+                    title: Updated at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  org:
+                    required:
+                    - name
+                    type: object
+                    properties:
+                      id:
+                        title: Id
+                        type: string
+                        format: uuid
+                        readOnly: true
+                      name:
+                        title: Name
+                        type: string
+                        maxLength: 100
+                        minLength: 1
+                      domains:
+                        description: comma separated list
+                        type: array
+                        items:
+                          title: Domains
+                          type: string
+                          maxLength: 50
+                          minLength: 1
+                      available_models:
+                        title: Available models
+                        type: string
+                        readOnly: true
+                      webhooks_enabled:
+                        title: Webhooks enabled
+                        type: string
+                        readOnly: true
+                      webhooks_secret:
+                        title: Webhooks secret
+                        type: string
+                        readOnly: true
+                      report_ancestry_enabled:
+                        title: Report ancestry enabled
+                        type: string
+                        readOnly: true
+                      report_prs_ruo_cardio_enabled:
+                        title: Report prs ruo cardio enabled
+                        type: string
+                        readOnly: true
+                      report_prs_ruo_cancer_enabled:
+                        title: Report prs ruo cancer enabled
+                        type: string
+                        readOnly: true
+                      report_prs_clinical_cardio_enabled:
+                        title: Report prs clinical cardio enabled
+                        type: string
+                        readOnly: true
+                      report_prs_clinical_cancer_enabled:
+                        title: Report prs clinical cancer enabled
+                        type: string
+                        readOnly: true
+      tags:
+      - users
+  /users/reset-password:
+    parameters: []
+    post:
+      operationId: users_reset-password_create
+      description: Reset password)
+      responses:
+        '406':
+          description: '{"detail": "Not acceptable"}'
+        '202':
+          description: '{"detail": "Accepted"}'
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - code
+              - password
+              type: object
+              properties:
+                code:
+                  title: Code
+                  type: string
+                  minLength: 1
+                password:
+                  title: Password
+                  type: string
+                  minLength: 1
+        required: true
+  /users/{user_id}:
+    parameters:
+    - name: user_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: users_read
+      description: User details
+      responses:
+        '401':
+          description: '{"detail": "Unauthorized request"}'
+        '403':
+          description: '{"detail": "Forbidden"}'
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                required:
+                - email
+                - role
+                - org
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  email:
+                    title: Email
+                    type: string
+                    format: email
+                    maxLength: 254
+                    minLength: 1
+                  first_name:
+                    title: First name
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 100
+                  last_name:
+                    title: Last name
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 100
+                  role:
+                    title: Role
+                    type: string
+                    enum:
+                    - SystemAdmin
+                    - OrgAdmin
+                    - OrgUser
+                    - InternalService
+                  is_active:
+                    title: Is active
+                    type: boolean
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  deleted_at:
+                    title: Deleted at
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  updated_at:
+                    title: Updated at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  org:
+                    required:
+                    - name
+                    type: object
+                    properties:
+                      id:
+                        title: Id
+                        type: string
+                        format: uuid
+                        readOnly: true
+                      name:
+                        title: Name
+                        type: string
+                        maxLength: 100
+                        minLength: 1
+                      domains:
+                        description: comma separated list
+                        type: array
+                        items:
+                          title: Domains
+                          type: string
+                          maxLength: 50
+                          minLength: 1
+                      available_models:
+                        title: Available models
+                        type: string
+                        readOnly: true
+                      webhooks_enabled:
+                        title: Webhooks enabled
+                        type: string
+                        readOnly: true
+                      webhooks_secret:
+                        title: Webhooks secret
+                        type: string
+                        readOnly: true
+                      report_ancestry_enabled:
+                        title: Report ancestry enabled
+                        type: string
+                        readOnly: true
+                      report_prs_ruo_cardio_enabled:
+                        title: Report prs ruo cardio enabled
+                        type: string
+                        readOnly: true
+                      report_prs_ruo_cancer_enabled:
+                        title: Report prs ruo cancer enabled
+                        type: string
+                        readOnly: true
+                      report_prs_clinical_cardio_enabled:
+                        title: Report prs clinical cardio enabled
+                        type: string
+                        readOnly: true
+                      report_prs_clinical_cancer_enabled:
+                        title: Report prs clinical cancer enabled
+                        type: string
+                        readOnly: true
+      tags:
+      - users
+    put:
+      operationId: users_update
+      description: Edit user
+      parameters:
+      - name: user_id
+        in: path
+        description: Id of user
+        required: true
+        schema:
+          type: string
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                required:
+                - email
+                - role
+                - org
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  email:
+                    title: Email
+                    type: string
+                    format: email
+                    maxLength: 254
+                    minLength: 1
+                  first_name:
+                    title: First name
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 100
+                  last_name:
+                    title: Last name
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 100
+                  role:
+                    title: Role
+                    type: string
+                    enum:
+                    - SystemAdmin
+                    - OrgAdmin
+                    - OrgUser
+                    - InternalService
+                  is_active:
+                    title: Is active
+                    type: boolean
+                  created_at:
+                    title: Created at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  deleted_at:
+                    title: Deleted at
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  updated_at:
+                    title: Updated at
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  org:
+                    required:
+                    - name
+                    type: object
+                    properties:
+                      id:
+                        title: Id
+                        type: string
+                        format: uuid
+                        readOnly: true
+                      name:
+                        title: Name
+                        type: string
+                        maxLength: 100
+                        minLength: 1
+                      domains:
+                        description: comma separated list
+                        type: array
+                        items:
+                          title: Domains
+                          type: string
+                          maxLength: 50
+                          minLength: 1
+                      available_models:
+                        title: Available models
+                        type: string
+                        readOnly: true
+                      webhooks_enabled:
+                        title: Webhooks enabled
+                        type: string
+                        readOnly: true
+                      webhooks_secret:
+                        title: Webhooks secret
+                        type: string
+                        readOnly: true
+                      report_ancestry_enabled:
+                        title: Report ancestry enabled
+                        type: string
+                        readOnly: true
+                      report_prs_ruo_cardio_enabled:
+                        title: Report prs ruo cardio enabled
+                        type: string
+                        readOnly: true
+                      report_prs_ruo_cancer_enabled:
+                        title: Report prs ruo cancer enabled
+                        type: string
+                        readOnly: true
+                      report_prs_clinical_cardio_enabled:
+                        title: Report prs clinical cardio enabled
+                        type: string
+                        readOnly: true
+                      report_prs_clinical_cancer_enabled:
+                        title: Report prs clinical cancer enabled
+                        type: string
+                        readOnly: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - first_name
+              - last_name
+              - role
+              type: object
+              properties:
+                first_name:
+                  title: First name
+                  type: string
+                  minLength: 1
+                last_name:
+                  title: Last name
+                  type: string
+                  minLength: 1
+                role:
+                  title: Role
+                  type: string
+                  enum:
+                  - SystemAdmin
+                  - OrgAdmin
+                  - OrgUser
+                  - InternalService
+        required: true
+    delete:
+      operationId: users_delete
+      description: Delete user
+      responses:
+        '400':
+          description: '{"detail": "Bad request"}'
+        '401':
+          description: '{"detail": "Unauthorized request"}'
+        '403':
+          description: '{"detail": "Forbidden"}'
+        '406':
+          description: '{"detail": "Incorrect ID"}'
+        '200':
+          description: '{"detail": "User deleted"}'
+      tags:
+      - users
+  /users/{user_id}/resend-invite:
+    parameters:
+    - name: user_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: users_resend-invite_create
+      description: Resend invite to user
+      responses:
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Unprocessable
+        '200':
+          description: OK
+      tags:
+      - users
+components:
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header

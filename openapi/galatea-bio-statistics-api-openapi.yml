@@ -1,0 +1,328 @@
+openapi: 3.2.0
+info:
+  title: Octopod Statistics API
+  version: v1
+servers:
+- url: https://api.galatea.bio/api/v1
+security:
+- Bearer: []
+tags:
+- name: statistics
+paths:
+  /statistics:
+    parameters: []
+    get:
+      operationId: statistics_list
+      description: Get statistics
+      parameters:
+      - name: org_names
+        in: query
+        description: Search by organizations names
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: min_date
+        in: query
+        description: Min date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: max_date
+        in: query
+        description: Max date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Statistics data
+          content:
+            application/json:
+              schema:
+                required:
+                - source_files_statistics
+                - result_files_statistics
+                - orders_statistics
+                - credit_statistics
+                - resource_statistics
+                type: object
+                properties:
+                  source_files_statistics:
+                    required:
+                    - amount
+                    - file_size_bytes
+                    - valid
+                    - not_valid
+                    - check_in_process
+                    - single_sample
+                    - multi_sample
+                    - gnt
+                    - wgs
+                    - web_upload
+                    - sftp_upload
+                    type: object
+                    properties:
+                      amount:
+                        title: Amount
+                        type: integer
+                      file_size_bytes:
+                        title: File size bytes
+                        type: integer
+                      valid:
+                        title: Valid
+                        type: integer
+                      not_valid:
+                        title: Not valid
+                        type: integer
+                      check_in_process:
+                        title: Check in process
+                        type: integer
+                      single_sample:
+                        title: Single sample
+                        type: integer
+                      multi_sample:
+                        title: Multi sample
+                        type: integer
+                      gnt:
+                        title: Gnt
+                        type: integer
+                      wgs:
+                        title: Wgs
+                        type: integer
+                      web_upload:
+                        title: Web upload
+                        type: integer
+                      sftp_upload:
+                        title: Sftp upload
+                        type: integer
+                  result_files_statistics:
+                    required:
+                    - amount
+                    - file_size_bytes
+                    type: object
+                    properties:
+                      amount:
+                        title: Amount
+                        type: integer
+                      file_size_bytes:
+                        title: File size bytes
+                        type: integer
+                  orders_statistics:
+                    type: array
+                    items:
+                      required:
+                      - amount
+                      - completed
+                      - failed
+                      - in_progress
+                      - reports_failed
+                      - gnt
+                      - wgs
+                      type: object
+                      properties:
+                        amount:
+                          title: Amount
+                          type: integer
+                        completed:
+                          title: Completed
+                          type: integer
+                        failed:
+                          title: Failed
+                          type: integer
+                        in_progress:
+                          title: In progress
+                          type: integer
+                        reports_failed:
+                          title: Reports failed
+                          type: integer
+                        gnt:
+                          title: Gnt
+                          type: integer
+                        wgs:
+                          title: Wgs
+                          type: integer
+                        model_api_name:
+                          title: Model api name
+                          type:
+                          - string
+                          - 'null'
+                          minLength: 1
+                  credit_statistics:
+                    required:
+                    - orders_amount
+                    - pdf_reports_amount
+                    - replenishment_amount
+                    type: object
+                    properties:
+                      orders_amount:
+                        title: Orders amount
+                        type: integer
+                      pdf_reports_amount:
+                        title: Pdf reports amount
+                        type: integer
+                      replenishment_amount:
+                        title: Replenishment amount
+                        type: integer
+                  resource_statistics:
+                    required:
+                    - current_amount_ce_aws
+                    - current_amount_ce_app
+                    - current_queues
+                    - org_queues
+                    type: object
+                    properties:
+                      current_amount_ce_aws:
+                        title: Current amount ce aws
+                        type: integer
+                      current_amount_ce_app:
+                        title: Current amount ce app
+                        type: integer
+                      current_queues:
+                        type: array
+                        items:
+                          required:
+                          - queue_name
+                          - queue_type
+                          - owner
+                          type: object
+                          properties:
+                            queue_name:
+                              title: Queue name
+                              type: string
+                              minLength: 1
+                            queue_type:
+                              title: Queue type
+                              type: string
+                              minLength: 1
+                            owner:
+                              title: Owner
+                              type: string
+                              minLength: 1
+                      org_queues:
+                        type: array
+                        items:
+                          required:
+                          - org_name
+                          - orders_total
+                          - queues
+                          type: object
+                          properties:
+                            org_name:
+                              title: Org name
+                              type: string
+                              minLength: 1
+                            orders_total:
+                              title: Orders total
+                              type: integer
+                            queues:
+                              type: array
+                              items:
+                                required:
+                                - orders_total
+                                - queue_name
+                                type: object
+                                properties:
+                                  orders_total:
+                                    title: Orders total
+                                    type: integer
+                                  queue_name:
+                                    title: Queue name
+                                    type: string
+                                    minLength: 1
+      tags:
+      - statistics
+  /statistics/orders_plot:
+    parameters: []
+    get:
+      operationId: statistics_orders_plot_list
+      description: Get orders statistic plot
+      parameters:
+      - name: org_names
+        in: query
+        description: Search by organizations names
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: plot_date_range
+        in: query
+        description: Plot date range
+        required: false
+        schema:
+          type: string
+          enum:
+          - 1
+          - 2
+      - name: min_date
+        in: query
+        description: Min date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: max_date
+        in: query
+        description: Max date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Plot data
+          content:
+            application/json:
+              schema:
+                required:
+                - items
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      required:
+                      - x
+                      - y
+                      - series
+                      type: object
+                      properties:
+                        x:
+                          title: X
+                          type: string
+                          format: date-time
+                        y:
+                          title: Y
+                          type: integer
+                        series:
+                          title: Series
+                          type: string
+                          minLength: 1
+      tags:
+      - statistics
+components:
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header

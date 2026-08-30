@@ -1,0 +1,150 @@
+openapi: 3.2.0
+info:
+  title: Octopod Auth API
+  version: v1
+servers:
+- url: https://api.galatea.bio/api/v1
+security:
+- Bearer: []
+tags:
+- name: auth
+paths:
+  /users/auth:
+    parameters: []
+    post:
+      operationId: users_auth_create
+      description: Login
+      responses:
+        '401':
+          description: '{"detail": "Unauthorized request"}'
+        '200':
+          description: '{"status": "Ok"}'
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  description: Email
+                  type: string
+                password:
+                  description: Password
+                  type: string
+              in: body
+        required: true
+  /users/confirm:
+    parameters: []
+    post:
+      operationId: users_confirm_create
+      description: MFA confirmation
+      responses:
+        '401':
+          description: '{"detail": "Unauthorized request"}'
+        '200':
+          description: '{"status": "Ok"}'
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - code
+              - mfa_session_id
+              type: object
+              properties:
+                code:
+                  title: Code
+                  type: integer
+                mfa_session_id:
+                  title: Mfa session id
+                  type: string
+                  minLength: 1
+        required: true
+  /users/logout:
+    parameters: []
+    post:
+      operationId: users_logout_create
+      description: Logout from user session
+      responses:
+        '400':
+          description: '{"detail": "Bad request"}'
+        '401':
+          description: '{"detail": "Unauthorized request"}'
+        '403':
+          description: '{"detail": "Forbidden"}'
+        '200':
+          description: '[{"status": "Ok"}]'
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh:
+                  description: Refresh token
+                  type: string
+              in: body
+        required: true
+  /users/refresh:
+    parameters: []
+    post:
+      operationId: users_refresh_create
+      description: Refresh access tokens
+      responses:
+        '401':
+          description: '{"detail": "Unauthorized request"}'
+        '200':
+          description: '{"status": "Ok"}'
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh:
+                  description: Refresh token
+                  type: string
+                access:
+                  description: Expired access token
+                  type: string
+              in: body
+        required: true
+  /users/request-new-code:
+    parameters: []
+    post:
+      operationId: users_request-new-code_create
+      description: Request new MFA code
+      responses:
+        '401':
+          description: '{"detail": "Unauthorized request"}'
+        '200':
+          description: '{"status": "Ok"}'
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - mfa_session_id
+              type: object
+              properties:
+                mfa_session_id:
+                  title: Mfa session id
+                  type: string
+                  minLength: 1
+        required: true
+components:
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header

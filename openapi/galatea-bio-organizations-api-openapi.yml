@@ -1,0 +1,936 @@
+openapi: 3.2.0
+info:
+  title: Octopod Organizations API
+  version: v1
+servers:
+- url: https://api.galatea.bio/api/v1
+security:
+- Bearer: []
+tags:
+- name: organizations
+paths:
+  /organizations:
+    parameters: []
+    get:
+      operationId: organizations_list
+      description: Get organizations
+      parameters:
+      - name: named_models
+        in: query
+        description: Search by named models
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: model_api_names
+        in: query
+        description: Search by model api name
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - skywalker
+            - hutt
+            - palpatine
+            - vader
+            - mysterio
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Organizations list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                  - name
+                  - home_folder_name
+                  type: object
+                  properties:
+                    id:
+                      title: Id
+                      type: string
+                      format: uuid
+                      readOnly: true
+                    name:
+                      title: Name
+                      type: string
+                      maxLength: 100
+                      minLength: 1
+                    domains:
+                      description: comma separated list
+                      type: array
+                      items:
+                        title: Domains
+                        type: string
+                        maxLength: 50
+                        minLength: 1
+                    home_folder_name:
+                      title: Home folder name
+                      type: string
+                      maxLength: 128
+                      minLength: 1
+                    result_summary_group_set:
+                      title: Result summary group set
+                      type: string
+                      readOnly: true
+                    result_summary_chroms:
+                      title: Result summary chroms
+                      type: string
+                      readOnly: true
+                    result_detailed_group_set:
+                      title: Result detailed group set
+                      type: string
+                      readOnly: true
+                    result_detailed_chroms:
+                      title: Result detailed chroms
+                      type: string
+                      readOnly: true
+                    report_ancestry_enabled:
+                      title: Report ancestry enabled
+                      type: string
+                      readOnly: true
+                    report_prs_ruo_cardio_enabled:
+                      title: Report prs ruo cardio enabled
+                      type: string
+                      readOnly: true
+                    report_prs_ruo_cancer_enabled:
+                      title: Report prs ruo cancer enabled
+                      type: string
+                      readOnly: true
+                    report_prs_clinical_cardio_enabled:
+                      title: Report prs clinical cardio enabled
+                      type: string
+                      readOnly: true
+                    report_prs_clinical_cancer_enabled:
+                      title: Report prs clinical cancer enabled
+                      type: string
+                      readOnly: true
+                    mfa_enabled:
+                      title: Mfa enabled
+                      type: boolean
+                    web_users_count:
+                      title: Web users count
+                      type: string
+                      readOnly: true
+                    sftp_users_count:
+                      title: Sftp users count
+                      type: string
+                      readOnly: true
+                    use_own_batch_queue:
+                      title: Use own batch queue
+                      type: boolean
+                    batch_max_vcpu:
+                      title: Batch max vcpu
+                      type:
+                      - integer
+                      - 'null'
+                      maximum: 2147483647
+                      minimum: -2147483648
+                    batch_job_queue:
+                      title: Batch job queue
+                      type: string
+                      readOnly: true
+                    quickbooks_enabled:
+                      title: Quickbooks enabled
+                      type: boolean
+                    quickbooks_customer_id:
+                      title: Quickbooks customer id
+                      type:
+                      - string
+                      - 'null'
+                    quickbooks_email:
+                      title: Quickbooks email
+                      type:
+                      - string
+                      - 'null'
+                    webhooks_enabled:
+                      title: Webhooks enabled
+                      type: string
+                      readOnly: true
+                    webhooks_secret:
+                      title: Webhooks secret
+                      type: string
+                      readOnly: true
+      tags:
+      - organizations
+    post:
+      operationId: organizations_create
+      description: ''
+      responses:
+        '201':
+          description: ''
+      tags:
+      - organizations
+  /organizations/sftp_users_sync:
+    parameters: []
+    get:
+      operationId: organizations_sftp_users_sync_list
+      description: Sync sftp users
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: OK
+      tags:
+      - organizations
+  /organizations/{organization_id}:
+    parameters:
+    - name: organization_id
+      in: path
+      required: true
+      schema:
+        type: string
+    put:
+      operationId: organizations_update
+      description: ''
+      responses:
+        '200':
+          description: ''
+      tags:
+      - organizations
+  /organizations/{organization_id}/generate-api-key:
+    parameters:
+    - name: organization_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: organizations_generate-api-key_create
+      description: ''
+      responses:
+        '201':
+          description: ''
+      tags:
+      - organizations
+  /organizations/{organization_id}/generate-webhooks-secret:
+    parameters:
+    - name: organization_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: organizations_generate-webhooks-secret_create
+      description: Generate new webhooks secret key
+      parameters:
+      - name: organization_id
+        in: path
+        description: Organization Id
+        required: true
+        schema:
+          type: string
+      responses:
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '200':
+          description: New webhooks secret key
+      tags:
+      - organizations
+  /organizations/{organization_id}/models:
+    parameters:
+    - name: organization_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: organizations_models_list
+      description: Get available models for organization
+      parameters:
+      - name: organization_id
+        in: path
+        description: Organization Id
+        required: true
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Entity list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    model_name:
+                      title: Model name
+                      type: string
+                      readOnly: true
+                    model_api_name:
+                      title: Model api name
+                      type: string
+                      readOnly: true
+      tags:
+      - organizations
+    post:
+      operationId: organizations_models_create
+      description: ''
+      responses:
+        '201':
+          description: ''
+      tags:
+      - organizations
+  /organizations/{organization_id}/models_permissions:
+    parameters:
+    - name: organization_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: organizations_models_permissions_create
+      description: Edit model permission of accessed named model by org
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '201':
+          description: Named model permissions are updated
+          content:
+            application/json:
+              schema:
+                required:
+                - execution_results
+                - post_execution_results
+                type: object
+                properties:
+                  model_name:
+                    title: Model name
+                    type: string
+                    readOnly: true
+                  model_api_name:
+                    title: Model api name
+                    type: string
+                    readOnly: true
+                  execution_results:
+                    type: object
+                    properties:
+                      result_sub_pop:
+                        title: Result sub pop
+                        type: boolean
+                      result_sub_pop_chrm:
+                        title: Result sub pop chrm
+                        type: boolean
+                      result_super_pop:
+                        title: Result super pop
+                        type: boolean
+                      result_super_pop_chrm:
+                        title: Result super pop chrm
+                        type: boolean
+                      result_svg_data:
+                        title: Result svg data
+                        type: boolean
+                      result_prs_data:
+                        title: Result prs data
+                        type: boolean
+                      result_prs_tech_data:
+                        title: Result prs tech data
+                        type: boolean
+                      result_prs_qc:
+                        title: Result prs qc
+                        type: boolean
+                  post_execution_results:
+                    type: object
+                    properties:
+                      ancestry_pdf_report:
+                        title: Ancestry pdf report
+                        type: boolean
+                      prs_ruo_cardio_pdf_report:
+                        title: Prs ruo cardio pdf report
+                        type: boolean
+                      prs_ruo_cancer_pdf_report:
+                        title: Prs ruo cancer pdf report
+                        type: boolean
+                      prs_clinical_cardio_pdf_report:
+                        title: Prs clinical cardio pdf report
+                        type: boolean
+                      prs_clinical_cancer_pdf_report:
+                        title: Prs clinical cancer pdf report
+                        type: boolean
+      tags:
+      - organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - models_permissions
+              type: object
+              properties:
+                models_permissions:
+                  type: array
+                  items:
+                    required:
+                    - model_name
+                    - execution_results
+                    - post_execution_results
+                    type: object
+                    properties:
+                      model_name:
+                        title: Model name
+                        type: string
+                        minLength: 1
+                      execution_results:
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          result_sub_pop:
+                            title: Result sub pop
+                            type: boolean
+                          result_sub_pop_chrm:
+                            title: Result sub pop chrm
+                            type: boolean
+                          result_super_pop:
+                            title: Result super pop
+                            type: boolean
+                          result_super_pop_chrm:
+                            title: Result super pop chrm
+                            type: boolean
+                          result_svg_data:
+                            title: Result svg data
+                            type: boolean
+                          result_prs_data:
+                            title: Result prs data
+                            type: boolean
+                          result_prs_tech_data:
+                            title: Result prs tech data
+                            type: boolean
+                          result_prs_qc:
+                            title: Result prs qc
+                            type: boolean
+                      post_execution_results:
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          ancestry_pdf_report:
+                            title: Ancestry pdf report
+                            type: boolean
+                          prs_ruo_cardio_pdf_report:
+                            title: Prs ruo cardio pdf report
+                            type: boolean
+                          prs_ruo_cancer_pdf_report:
+                            title: Prs ruo cancer pdf report
+                            type: boolean
+                          prs_clinical_cardio_pdf_report:
+                            title: Prs clinical cardio pdf report
+                            type: boolean
+                          prs_clinical_cancer_pdf_report:
+                            title: Prs clinical cancer pdf report
+                            type: boolean
+        required: true
+  /organizations/{organization_id}/sftp_users:
+    parameters:
+    - name: organization_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: organizations_sftp_users_list
+      description: Get SFTP users of organization
+      parameters:
+      - name: organization_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Entity list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                  - id
+                  - user_name
+                  - user_home_folder
+                  type: object
+                  properties:
+                    id:
+                      title: Id
+                      type: string
+                      format: uuid
+                    user_name:
+                      title: User name
+                      type: string
+                      minLength: 1
+                    user_home_folder:
+                      title: User home folder
+                      type: string
+                      minLength: 1
+                    connection_hint:
+                      title: Connection hint
+                      type: string
+                      readOnly: true
+                    ssh_keys:
+                      title: Ssh keys
+                      type: string
+                      readOnly: true
+      tags:
+      - organizations
+    post:
+      operationId: organizations_sftp_users_create
+      description: Create sftp user for organization
+      responses:
+        '400':
+          description: '{"detail": "Bad request"}'
+        '401':
+          description: '{"detail": "Unauthorized request"}'
+        '403':
+          description: '{"detail": "Forbidden"}'
+        '422':
+          description: '{"detail": "Request cannot be processed"}'
+        '200':
+          description: Entity item
+          content:
+            application/json:
+              schema:
+                required:
+                - id
+                - user_name
+                - user_home_folder
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                  user_name:
+                    title: User name
+                    type: string
+                    minLength: 1
+                  user_home_folder:
+                    title: User home folder
+                    type: string
+                    minLength: 1
+                  connection_hint:
+                    title: Connection hint
+                    type: string
+                    readOnly: true
+                  ssh_keys:
+                    title: Ssh keys
+                    type: string
+                    readOnly: true
+      tags:
+      - organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ssh_public_body_key:
+                  title: Ssh public body key
+                  type: string
+                  default: ''
+                  minLength: 1
+        required: true
+  /organizations/{organization_id}/sftp_users/{sftp_user_id}:
+    parameters:
+    - name: organization_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: sftp_user_id
+      in: path
+      required: true
+      schema:
+        type: string
+    delete:
+      operationId: organizations_sftp_users_delete
+      description: Delete SFTP user of organization
+      parameters:
+      - name: organization_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      - name: sftp_user_id
+        in: path
+        description: SFTP user ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Success
+      tags:
+      - organizations
+  /organizations/{organization_id}/sftp_users/{sftp_user_id}/ssh_keys:
+    parameters:
+    - name: organization_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: sftp_user_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: organizations_sftp_users_ssh_keys_create
+      description: Add ssh key to sftp user
+      responses:
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '200':
+          description: Entity item
+          content:
+            application/json:
+              schema:
+                required:
+                - id
+                - user_name
+                - user_home_folder
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                  user_name:
+                    title: User name
+                    type: string
+                    minLength: 1
+                  user_home_folder:
+                    title: User home folder
+                    type: string
+                    minLength: 1
+                  connection_hint:
+                    title: Connection hint
+                    type: string
+                    readOnly: true
+                  ssh_keys:
+                    title: Ssh keys
+                    type: string
+                    readOnly: true
+      tags:
+      - organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ssh_public_body_key:
+                  title: Ssh public body key
+                  type: string
+                  default: ''
+                  minLength: 1
+        required: true
+  /organizations/{organization_id}/sftp_users/{sftp_user_id}/ssh_keys/{ssh_key_id}:
+    parameters:
+    - name: organization_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: sftp_user_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: ssh_key_id
+      in: path
+      required: true
+      schema:
+        type: string
+    delete:
+      operationId: organizations_sftp_users_ssh_keys_delete
+      description: Delete ssh key from sftp user
+      responses:
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '406':
+          description: Not acceptable
+        '200':
+          description: Entity item
+          content:
+            application/json:
+              schema:
+                required:
+                - id
+                - user_name
+                - user_home_folder
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: string
+                    format: uuid
+                  user_name:
+                    title: User name
+                    type: string
+                    minLength: 1
+                  user_home_folder:
+                    title: User home folder
+                    type: string
+                    minLength: 1
+                  connection_hint:
+                    title: Connection hint
+                    type: string
+                    readOnly: true
+                  ssh_keys:
+                    title: Ssh keys
+                    type: string
+                    readOnly: true
+      tags:
+      - organizations
+  /organizations/{organization_id}/webhooks-info:
+    parameters:
+    - name: organization_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: organizations_webhooks-info_list
+      description: Get organization webhooks information
+      parameters:
+      - name: organization_id
+        in: path
+        description: Organization Id
+        required: true
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Webhooks information
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                  - webhook_action
+                  - remote_endpoint
+                  type: object
+                  properties:
+                    id:
+                      title: Id
+                      type: string
+                      format: uuid
+                      readOnly: true
+                    org_id:
+                      title: Org id
+                      type: string
+                      readOnly: true
+                    webhook_action:
+                      title: Webhook action
+                      type: string
+                      enum:
+                      - order_moved_to_completed_state
+                      - source_file_validation_completed
+                    remote_endpoint:
+                      title: Remote endpoint
+                      type: string
+                      minLength: 1
+                    max_retries_count:
+                      title: Max retries count
+                      type: string
+                      readOnly: true
+                    save_error_in_notifications:
+                      title: Save error in notifications
+                      type: boolean
+                    created_at:
+                      title: Created at
+                      type: string
+                      format: date-time
+                      readOnly: true
+      tags:
+      - organizations
+    post:
+      operationId: organizations_webhooks-info_create
+      description: Edit organization webhooks information
+      parameters:
+      - name: organization_id
+        in: path
+        description: Organization Id
+        required: true
+        schema:
+          type: string
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '202':
+          description: Webhooks information
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                  - webhook_action
+                  - remote_endpoint
+                  type: object
+                  properties:
+                    id:
+                      title: Id
+                      type: string
+                      format: uuid
+                      readOnly: true
+                    org_id:
+                      title: Org id
+                      type: string
+                      readOnly: true
+                    webhook_action:
+                      title: Webhook action
+                      type: string
+                      enum:
+                      - order_moved_to_completed_state
+                      - source_file_validation_completed
+                    remote_endpoint:
+                      title: Remote endpoint
+                      type: string
+                      minLength: 1
+                    max_retries_count:
+                      title: Max retries count
+                      type: string
+                      readOnly: true
+                    save_error_in_notifications:
+                      title: Save error in notifications
+                      type: boolean
+                    created_at:
+                      title: Created at
+                      type: string
+                      format: date-time
+                      readOnly: true
+      tags:
+      - organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                required:
+                - id
+                - webhook_action
+                - remote_endpoint
+                - max_retries_count
+                - save_error_in_notifications
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  webhook_action:
+                    title: Webhook action
+                    type: string
+                    enum:
+                    - order_moved_to_completed_state
+                    - source_file_validation_completed
+                  remote_endpoint:
+                    title: Remote endpoint
+                    type: string
+                    minLength: 1
+                  max_retries_count:
+                    title: Max retries count
+                    type: integer
+                    maximum: 10
+                    minimum: 1
+                  save_error_in_notifications:
+                    title: Save error in notifications
+                    type: boolean
+        required: true
+  /organizations/{organization_id}/webhooks/{webhook_id}/test:
+    parameters:
+    - name: organization_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: webhook_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: organizations_webhooks_test_create
+      description: Test organization webhooks
+      parameters:
+      - name: organization_id
+        in: path
+        description: Organization Id
+        required: true
+        schema:
+          type: string
+      - name: webhook_id
+        in: path
+        description: Webhook Id
+        required: true
+        schema:
+          type: string
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized request
+        '403':
+          description: Forbidden
+        '202':
+          description: Webhooks information
+      tags:
+      - organizations
+components:
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header

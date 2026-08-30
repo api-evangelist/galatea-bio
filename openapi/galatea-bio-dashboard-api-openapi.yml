@@ -1,0 +1,855 @@
+openapi: 3.2.0
+info:
+  title: Octopod Dashboard API
+  version: v1
+servers:
+- url: https://api.galatea.bio/api/v1
+security:
+- Bearer: []
+tags:
+- name: dashboard
+paths:
+  /dashboard/admix:
+    parameters: []
+    get:
+      operationId: dashboard_admix_list
+      description: Get dashboard data AdmixPlot
+      parameters:
+      - name: sort_by
+        in: query
+        description: Sorting
+        required: false
+        schema:
+          type: string
+          enum:
+          - sp_group
+      - name: group_by
+        in: query
+        description: Grouping
+        required: false
+        schema:
+          type: string
+          enum:
+          - sp_group
+      - name: order_id
+        in: query
+        description: Search by order id
+        required: false
+        schema:
+          type: string
+      - name: tags_ids
+        in: query
+        description: Filter by tags ids
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: ancestral_component
+        in: query
+        description: 'Ancestral component, one of item related to the model api
+
+          Skywalker: AFR, AMR, EAS, EUR, LME, OCE, SAS
+
+          Vader: AFR, AMR, EAS, EUR, LME, SAS, SEA, OCE, OTHERSHutt: AFR, EUR, EAS, NAM, SAS, OCE, LMEPalpatine: CAS, EAS, NAS, SAS, SEA, WAS, XAS'
+        required: false
+        schema:
+          type: string
+      - name: threshold
+        in: query
+        description: Threshold
+        required: false
+        schema:
+          type: number
+      - name: model_name
+        in: query
+        description: Model name
+        required: false
+        schema:
+          type: string
+      - name: model_api_name
+        in: query
+        description: Model API name
+        required: false
+        schema:
+          type: string
+          enum:
+          - skywalker
+          - hutt
+          - palpatine
+          - vader
+          - mysterio
+      - name: min_date
+        in: query
+        description: Min date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: max_date
+        in: query
+        description: Max date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: all_records
+        in: query
+        description: Show all records
+        required: false
+        schema:
+          type: boolean
+      - name: plot_request_id
+        in: query
+        description: Get already existed backend plot
+        required: false
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Entity list
+          content:
+            application/json:
+              schema:
+                required:
+                - meta
+                - items
+                type: object
+                properties:
+                  meta:
+                    required:
+                    - groups
+                    - total_count
+                    type: object
+                    properties:
+                      groups:
+                        type: array
+                        items:
+                          required:
+                          - name
+                          - count
+                          type: object
+                          properties:
+                            name:
+                              title: Name
+                              type: string
+                              minLength: 1
+                            count:
+                              title: Count
+                              type: integer
+                      total_count:
+                        title: Total count
+                        type: integer
+                  items:
+                    type: array
+                    items:
+                      required:
+                      - x
+                      - y
+                      - series
+                      type: object
+                      properties:
+                        x:
+                          title: X
+                          type: string
+                          minLength: 1
+                        y:
+                          title: Y
+                          type: number
+                        series:
+                          title: Series
+                          type: string
+                          minLength: 1
+      tags:
+      - dashboard
+  /dashboard/donut:
+    parameters: []
+    get:
+      operationId: dashboard_donut_list
+      description: Get dashboard data DonutPlot22
+      parameters:
+      - name: order_id
+        in: query
+        description: Search by order id
+        required: false
+        schema:
+          type: string
+      - name: tags_ids
+        in: query
+        description: Filter by tags ids
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: ancestral_component
+        in: query
+        description: 'Ancestral component, one of item related to the model api
+
+          Skywalker: AFR, AMR, EAS, EUR, LME, OCE, SAS
+
+          Vader: AFR, AMR, EAS, EUR, LME, SAS, SEA, OCE, OTHERSHutt: AFR, EUR, EAS, NAM, SAS, OCE, LMEPalpatine: CAS, EAS, NAS, SAS, SEA, WAS, XAS'
+        required: false
+        schema:
+          type: string
+      - name: threshold
+        in: query
+        description: Threshold
+        required: false
+        schema:
+          type: number
+      - name: model_name
+        in: query
+        description: Model name
+        required: false
+        schema:
+          type: string
+      - name: model_api_name
+        in: query
+        description: Model API name
+        required: false
+        schema:
+          type: string
+          enum:
+          - skywalker
+          - hutt
+          - palpatine
+          - vader
+          - mysterio
+      - name: min_date
+        in: query
+        description: Min date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: max_date
+        in: query
+        description: Max date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: all_records
+        in: query
+        description: Show all records
+        required: false
+        schema:
+          type: boolean
+      - name: plot_request_id
+        in: query
+        description: Get already existed backend plot
+        required: false
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Entity list
+          content:
+            application/json:
+              schema:
+                required:
+                - children
+                type: object
+                properties:
+                  children:
+                    type: array
+                    items:
+                      required:
+                      - children
+                      - name
+                      - value
+                      type: object
+                      properties:
+                        children:
+                          type: array
+                          items:
+                            required:
+                            - name
+                            - value
+                            type: object
+                            properties:
+                              name:
+                                title: Name
+                                type: string
+                                minLength: 1
+                              value:
+                                title: Value
+                                type: number
+                        name:
+                          title: Name
+                          type: string
+                          minLength: 1
+                        value:
+                          title: Value
+                          type: number
+      tags:
+      - dashboard
+  /dashboard/plot_request:
+    parameters: []
+    get:
+      operationId: dashboard_plot_request_list
+      description: Get plot requests
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        schema:
+          type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      - name: model_api_name
+        in: query
+        description: Model API name
+        required: false
+        schema:
+          type: string
+          enum:
+          - skywalker
+          - hutt
+          - palpatine
+          - vader
+          - mysterio
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Plot requests list
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  previous:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  results:
+                    type: array
+                    items:
+                      required:
+                      - filter
+                      - model_api_name
+                      type: object
+                      properties:
+                        id:
+                          title: Id
+                          type: string
+                          format: uuid
+                          readOnly: true
+                        user_id:
+                          title: User id
+                          type: string
+                          readOnly: true
+                        filter:
+                          title: Filter
+                          type: string
+                        model_api_name:
+                          title: Model api name
+                          type: string
+                          enum:
+                          - skywalker
+                          - hutt
+                          - palpatine
+                          - vader
+                          - mysterio
+                          - check_source
+                        items_count:
+                          title: Items count
+                          type:
+                          - integer
+                          - 'null'
+                          maximum: 2147483647
+                          minimum: -2147483648
+                        created_at:
+                          title: Created at
+                          type: string
+                          format: date-time
+                          readOnly: true
+                        updated_at:
+                          title: Updated at
+                          type: string
+                          format: date-time
+                          readOnly: true
+                        completed:
+                          title: Completed
+                          type: string
+                          readOnly: true
+      tags:
+      - dashboard
+  /dashboard/table_set:
+    parameters: []
+    get:
+      operationId: dashboard_table_set_list
+      description: Get table with data for Set labels
+      parameters:
+      - name: sort_by
+        in: query
+        description: Sorting
+        required: false
+        schema:
+          type: string
+          enum:
+          - sp_group
+      - name: group_by
+        in: query
+        description: Grouping
+        required: false
+        schema:
+          type: string
+          enum:
+          - sp_group
+      - name: sample_id
+        in: query
+        description: Search by SampleID
+        required: false
+        schema:
+          type: string
+      - name: order_id
+        in: query
+        description: Search by order id
+        required: false
+        schema:
+          type: string
+      - name: tags_ids
+        in: query
+        description: Filter by tags ids
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: ancestral_component
+        in: query
+        description: 'Ancestral component, one of item related to the model api
+
+          Skywalker: AFR, AMR, EAS, EUR, LME, OCE, SAS
+
+          Vader: AFR, AMR, EAS, EUR, LME, SAS, SEA, OCE, OTHERSHutt: AFR, EUR, EAS, NAM, SAS, OCE, LMEPalpatine: CAS, EAS, NAS, SAS, SEA, WAS, XAS'
+        required: false
+        schema:
+          type: string
+      - name: threshold
+        in: query
+        description: Threshold
+        required: false
+        schema:
+          type: number
+      - name: model_name
+        in: query
+        description: Model name
+        required: false
+        schema:
+          type: string
+      - name: model_api_name
+        in: query
+        description: Model API name
+        required: false
+        schema:
+          type: string
+          enum:
+          - skywalker
+          - hutt
+          - palpatine
+          - vader
+          - mysterio
+      - name: min_date
+        in: query
+        description: Min date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: max_date
+        in: query
+        description: Max date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: all_records
+        in: query
+        description: Show all records
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Paginated entity list
+      tags:
+      - dashboard
+  /dashboard/table_set/export:
+    parameters: []
+    get:
+      operationId: dashboard_table_set_export_list
+      description: Export table with data for Set labels
+      parameters:
+      - name: sort_by
+        in: query
+        description: Sorting
+        required: false
+        schema:
+          type: string
+          enum:
+          - sp_group
+      - name: group_by
+        in: query
+        description: Grouping
+        required: false
+        schema:
+          type: string
+          enum:
+          - sp_group
+      - name: sample_id
+        in: query
+        description: Search by SampleID
+        required: false
+        schema:
+          type: string
+      - name: order_id
+        in: query
+        description: Search by order id
+        required: false
+        schema:
+          type: string
+      - name: tags_ids
+        in: query
+        description: Filter by tags ids
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: ancestral_component
+        in: query
+        description: 'Ancestral component, one of item related to the model api
+
+          Skywalker: AFR, AMR, EAS, EUR, LME, OCE, SAS
+
+          Vader: AFR, AMR, EAS, EUR, LME, SAS, SEA, OCE, OTHERSHutt: AFR, EUR, EAS, NAM, SAS, OCE, LMEPalpatine: CAS, EAS, NAS, SAS, SEA, WAS, XAS'
+        required: false
+        schema:
+          type: string
+      - name: threshold
+        in: query
+        description: Threshold
+        required: false
+        schema:
+          type: number
+      - name: model_name
+        in: query
+        description: Model name
+        required: false
+        schema:
+          type: string
+      - name: model_api_name
+        in: query
+        description: Model API name
+        required: false
+        schema:
+          type: string
+          enum:
+          - skywalker
+          - hutt
+          - palpatine
+          - vader
+          - mysterio
+      - name: min_date
+        in: query
+        description: Min date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: max_date
+        in: query
+        description: Max date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: all_records
+        in: query
+        description: Show all records
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Result file stream
+      tags:
+      - dashboard
+  /dashboard/table_superset:
+    parameters: []
+    get:
+      operationId: dashboard_table_superset_list
+      description: Get table with data for Superset Group labels
+      parameters:
+      - name: sort_by
+        in: query
+        description: Sorting
+        required: false
+        schema:
+          type: string
+          enum:
+          - sp_group
+      - name: group_by
+        in: query
+        description: Grouping
+        required: false
+        schema:
+          type: string
+          enum:
+          - sp_group
+      - name: sample_id
+        in: query
+        description: Search by SampleID
+        required: false
+        schema:
+          type: string
+      - name: order_id
+        in: query
+        description: Search by order id
+        required: false
+        schema:
+          type: string
+      - name: tags_ids
+        in: query
+        description: Filter by tags ids
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: ancestral_component
+        in: query
+        description: 'Ancestral component, one of item related to the model api
+
+          Skywalker: AFR, AMR, EAS, EUR, LME, OCE, SAS
+
+          Vader: AFR, AMR, EAS, EUR, LME, SAS, SEA, OCE, OTHERSHutt: AFR, EUR, EAS, NAM, SAS, OCE, LMEPalpatine: CAS, EAS, NAS, SAS, SEA, WAS, XAS'
+        required: false
+        schema:
+          type: string
+      - name: threshold
+        in: query
+        description: Threshold
+        required: false
+        schema:
+          type: number
+      - name: model_name
+        in: query
+        description: Model name
+        required: false
+        schema:
+          type: string
+      - name: model_api_name
+        in: query
+        description: Model API name
+        required: false
+        schema:
+          type: string
+          enum:
+          - skywalker
+          - hutt
+          - palpatine
+          - vader
+          - mysterio
+      - name: min_date
+        in: query
+        description: Min date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: max_date
+        in: query
+        description: Max date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: all_records
+        in: query
+        description: Show all records
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Paginated entity list
+      tags:
+      - dashboard
+  /dashboard/table_superset/export:
+    parameters: []
+    get:
+      operationId: dashboard_table_superset_export_list
+      description: Export table with data for 7 labels
+      parameters:
+      - name: sort_by
+        in: query
+        description: Sorting
+        required: false
+        schema:
+          type: string
+          enum:
+          - sp_group
+      - name: group_by
+        in: query
+        description: Grouping
+        required: false
+        schema:
+          type: string
+          enum:
+          - sp_group
+      - name: sample_id
+        in: query
+        description: Search by SampleID
+        required: false
+        schema:
+          type: string
+      - name: order_id
+        in: query
+        description: Search by order id
+        required: false
+        schema:
+          type: string
+      - name: tags_ids
+        in: query
+        description: Filter by tags ids
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: ancestral_component
+        in: query
+        description: 'Ancestral component, one of item related to the model api
+
+          Skywalker: AFR, AMR, EAS, EUR, LME, OCE, SAS
+
+          Vader: AFR, AMR, EAS, EUR, LME, SAS, SEA, OCE, OTHERSHutt: AFR, EUR, EAS, NAM, SAS, OCE, LMEPalpatine: CAS, EAS, NAS, SAS, SEA, WAS, XAS'
+        required: false
+        schema:
+          type: string
+      - name: threshold
+        in: query
+        description: Threshold
+        required: false
+        schema:
+          type: number
+      - name: model_name
+        in: query
+        description: Model name
+        required: false
+        schema:
+          type: string
+      - name: model_api_name
+        in: query
+        description: Model API name
+        required: false
+        schema:
+          type: string
+          enum:
+          - skywalker
+          - hutt
+          - palpatine
+          - vader
+          - mysterio
+      - name: min_date
+        in: query
+        description: Min date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: max_date
+        in: query
+        description: Max date
+        required: false
+        example: '2000-01-01'
+        schema:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+      - name: all_records
+        in: query
+        description: Show all records
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
+        '200':
+          description: Result file stream
+      tags:
+      - dashboard
+components:
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header
