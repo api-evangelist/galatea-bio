@@ -31,17 +31,17 @@ specificationVersion: '0.23'
 created: '2026-08-16'
 modified: '2026-08-16'
 tags:
-- genomics
-- bioinformatics
-- ancestry
-- precision-medicine
+- Genomics
+- Bioinformatics
+- Ancestry
+- Precision Medicine
 - polygenic-risk-score
-- clinical-laboratory
-- genetic-testing
-- biobank
-- life-sciences
+- Clinical Laboratory
+- Genetic Testing
+- Biobank
+- Life Sciences
 - Health
-- sequencing
+- Sequencing
 tags_raw:
 - genomics
 - bioinformatics
