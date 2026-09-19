@@ -137,7 +137,7 @@ apis:
   humanURL: https://docs.galatea.bio/
   baseURL: https://api.galatea.bio/api/v1
   tags:
-  - Dashboard
+  - Dashboards
   tags_raw:
   - dashboard
   properties:
