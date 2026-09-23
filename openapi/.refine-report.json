@@ -1,0 +1,50 @@
+{
+  "provider": "galatea-bio",
+  "sources": [
+    "_original/galatea-bio-octopod-openapi-original.json"
+  ],
+  "outputs": [
+    "galatea-bio-auth-api-openapi.yml",
+    "galatea-bio-credit-api-openapi.yml",
+    "galatea-bio-dashboard-api-openapi.yml",
+    "galatea-bio-data-api-openapi.yml",
+    "galatea-bio-exec-api-openapi.yml",
+    "galatea-bio-internal-api-openapi.yml",
+    "galatea-bio-notification-api-openapi.yml",
+    "galatea-bio-organizations-api-openapi.yml",
+    "galatea-bio-statistics-api-openapi.yml",
+    "galatea-bio-users-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "1 archived document(s) dropped as subsets of other archived documents",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "galatea-bio-octopod-openapi-original.json: upgraded swagger 2.0 -> OpenAPI 3.2.0",
+    "galatea-bio-octopod-openapi-original.json: declared missing tag: auth",
+    "galatea-bio-octopod-openapi-original.json: declared missing tag: credit",
+    "galatea-bio-octopod-openapi-original.json: declared missing tag: dashboard",
+    "galatea-bio-octopod-openapi-original.json: declared missing tag: data",
+    "galatea-bio-octopod-openapi-original.json: declared missing tag: exec",
+    "galatea-bio-octopod-openapi-original.json: declared missing tag: internal",
+    "galatea-bio-octopod-openapi-original.json: declared missing tag: notification",
+    "galatea-bio-octopod-openapi-original.json: declared missing tag: organizations",
+    "galatea-bio-octopod-openapi-original.json: declared missing tag: statistics",
+    "galatea-bio-octopod-openapi-original.json: declared missing tag: users",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "_original/galatea-bio-octopod-openapi.yml: archived document superseded by a larger archived document",
+    "galatea-bio-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "galatea-bio-credit-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "galatea-bio-dashboard-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "galatea-bio-data-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "galatea-bio-exec-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "galatea-bio-internal-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "galatea-bio-notification-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "galatea-bio-organizations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "galatea-bio-statistics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "galatea-bio-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

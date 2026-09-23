@@ -7,7 +7,7 @@ servers:
 security:
 - Bearer: []
 tags:
-- name: data
+- name: Data
 paths:
   /data/files:
     parameters: []
@@ -198,7 +198,9 @@ paths:
                           title: Virtual
                           type: boolean
       tags:
-      - data
+      - Data
+      summary: Data files list
+      x-summary-source: derived
   /data/files/upload:
     parameters: []
     post:
@@ -303,7 +305,7 @@ paths:
                     title: Virtual
                     type: boolean
       tags:
-      - data
+      - Data
       requestBody:
         content:
           multipart/form-data:
@@ -326,6 +328,8 @@ paths:
                   format: binary
               required:
               - file
+      summary: Data files upload create
+      x-summary-source: derived
   /data/files/{source_file_id}:
     parameters:
     - name: source_file_id
@@ -444,7 +448,7 @@ paths:
                     title: Virtual
                     type: boolean
       tags:
-      - data
+      - Data
       requestBody:
         content:
           application/json:
@@ -457,6 +461,8 @@ paths:
                   - string
                   - 'null'
         required: true
+      summary: Data files update
+      x-summary-source: derived
     delete:
       operationId: data_files_delete
       description: Delete source file
@@ -477,7 +483,9 @@ paths:
         '200':
           description: ok
       tags:
-      - data
+      - Data
+      summary: Data files delete
+      x-summary-source: derived
   /data/files/{source_file_id}/download:
     parameters:
     - name: source_file_id
@@ -505,7 +513,9 @@ paths:
         '200':
           description: Source file stream
       tags:
-      - data
+      - Data
+      summary: Data files download list
+      x-summary-source: derived
   /data/pdfdata:
     parameters: []
     get:
@@ -536,7 +546,9 @@ paths:
         '200':
           description: '{"detail": "Data for PDF report"}'
       tags:
-      - data
+      - Data
+      summary: Data pdfdata list
+      x-summary-source: derived
   /data/prsdata:
     parameters: []
     get:
@@ -573,7 +585,9 @@ paths:
         '200':
           description: '{"detail": "Data for PDF report"}'
       tags:
-      - data
+      - Data
+      summary: Data prsdata list
+      x-summary-source: derived
   /data/results/pdf_report/{pdf_request_id}/change_notice:
     parameters:
     - name: pdf_request_id
@@ -588,7 +602,9 @@ paths:
         '201':
           description: ''
       tags:
-      - data
+      - Data
+      summary: Data results pdf report change notice create
+      x-summary-source: derived
   /data/results/upload:
     parameters: []
     post:
@@ -602,7 +618,7 @@ paths:
         '201':
           description: ok
       tags:
-      - data
+      - Data
       requestBody:
         content:
           multipart/form-data:
@@ -645,6 +661,8 @@ paths:
               required:
               - file
               - model_api_name
+      summary: Data results upload create
+      x-summary-source: derived
   /data/results/{exec_order_id}/download:
     parameters:
     - name: exec_order_id
@@ -693,7 +711,9 @@ paths:
         '200':
           description: Result file stream
       tags:
-      - data
+      - Data
+      summary: Data results download list
+      x-summary-source: derived
   /data/results/{exec_order_id}/json:
     parameters:
     - name: exec_order_id
@@ -732,7 +752,9 @@ paths:
         '200':
           description: Result file stream
       tags:
-      - data
+      - Data
+      summary: Data results json list
+      x-summary-source: derived
   /data/results/{exec_order_id}/pdf_report:
     parameters:
     - name: exec_order_id
@@ -929,7 +951,9 @@ paths:
                           type: string
                           readOnly: true
       tags:
-      - data
+      - Data
+      summary: Data results pdf report list
+      x-summary-source: derived
   /data/results/{exec_order_id}/request_pdf:
     parameters:
     - name: exec_order_id
@@ -952,7 +976,9 @@ paths:
         '200':
           description: Request PDF report for order_id
       tags:
-      - data
+      - Data
+      summary: Data results request pdf create
+      x-summary-source: derived
 components:
   securitySchemes:
     Bearer:

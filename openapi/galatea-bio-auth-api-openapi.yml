@@ -7,7 +7,7 @@ servers:
 security:
 - Bearer: []
 tags:
-- name: auth
+- name: Auth
 paths:
   /users/auth:
     parameters: []
@@ -20,7 +20,7 @@ paths:
         '200':
           description: '{"status": "Ok"}'
       tags:
-      - auth
+      - Auth
       requestBody:
         content:
           application/json:
@@ -35,6 +35,8 @@ paths:
                   type: string
               in: body
         required: true
+      summary: Users auth create
+      x-summary-source: derived
   /users/confirm:
     parameters: []
     post:
@@ -46,7 +48,7 @@ paths:
         '200':
           description: '{"status": "Ok"}'
       tags:
-      - auth
+      - Auth
       requestBody:
         content:
           application/json:
@@ -64,6 +66,8 @@ paths:
                   type: string
                   minLength: 1
         required: true
+      summary: Users confirm create
+      x-summary-source: derived
   /users/logout:
     parameters: []
     post:
@@ -79,7 +83,7 @@ paths:
         '200':
           description: '[{"status": "Ok"}]'
       tags:
-      - auth
+      - Auth
       requestBody:
         content:
           application/json:
@@ -91,6 +95,8 @@ paths:
                   type: string
               in: body
         required: true
+      summary: Users logout create
+      x-summary-source: derived
   /users/refresh:
     parameters: []
     post:
@@ -102,7 +108,7 @@ paths:
         '200':
           description: '{"status": "Ok"}'
       tags:
-      - auth
+      - Auth
       requestBody:
         content:
           application/json:
@@ -117,6 +123,8 @@ paths:
                   type: string
               in: body
         required: true
+      summary: Users refresh create
+      x-summary-source: derived
   /users/request-new-code:
     parameters: []
     post:
@@ -128,7 +136,7 @@ paths:
         '200':
           description: '{"status": "Ok"}'
       tags:
-      - auth
+      - Auth
       requestBody:
         content:
           application/json:
@@ -142,6 +150,8 @@ paths:
                   type: string
                   minLength: 1
         required: true
+      summary: Users request new code create
+      x-summary-source: derived
 components:
   securitySchemes:
     Bearer:

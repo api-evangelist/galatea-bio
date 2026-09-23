@@ -7,7 +7,7 @@ servers:
 security:
 - Bearer: []
 tags:
-- name: organizations
+- name: Organizations
 paths:
   /organizations:
     parameters: []
@@ -160,7 +160,9 @@ paths:
                       type: string
                       readOnly: true
       tags:
-      - organizations
+      - Organizations
+      summary: Organizations list
+      x-summary-source: derived
     post:
       operationId: organizations_create
       description: ''
@@ -168,7 +170,9 @@ paths:
         '201':
           description: ''
       tags:
-      - organizations
+      - Organizations
+      summary: Organizations create
+      x-summary-source: derived
   /organizations/sftp_users_sync:
     parameters: []
     get:
@@ -182,7 +186,9 @@ paths:
         '200':
           description: OK
       tags:
-      - organizations
+      - Organizations
+      summary: Organizations sftp users sync list
+      x-summary-source: derived
   /organizations/{organization_id}:
     parameters:
     - name: organization_id
@@ -197,7 +203,9 @@ paths:
         '200':
           description: ''
       tags:
-      - organizations
+      - Organizations
+      summary: Organizations update
+      x-summary-source: derived
   /organizations/{organization_id}/generate-api-key:
     parameters:
     - name: organization_id
@@ -212,7 +220,9 @@ paths:
         '201':
           description: ''
       tags:
-      - organizations
+      - Organizations
+      summary: Organizations generate api key create
+      x-summary-source: derived
   /organizations/{organization_id}/generate-webhooks-secret:
     parameters:
     - name: organization_id
@@ -238,7 +248,9 @@ paths:
         '200':
           description: New webhooks secret key
       tags:
-      - organizations
+      - Organizations
+      summary: Organizations generate webhooks secret create
+      x-summary-source: derived
   /organizations/{organization_id}/models:
     parameters:
     - name: organization_id
@@ -279,7 +291,9 @@ paths:
                       type: string
                       readOnly: true
       tags:
-      - organizations
+      - Organizations
+      summary: Organizations models list
+      x-summary-source: derived
     post:
       operationId: organizations_models_create
       description: ''
@@ -287,7 +301,9 @@ paths:
         '201':
           description: ''
       tags:
-      - organizations
+      - Organizations
+      summary: Organizations models create
+      x-summary-source: derived
   /organizations/{organization_id}/models_permissions:
     parameters:
     - name: organization_id
@@ -371,7 +387,7 @@ paths:
                         title: Prs clinical cancer pdf report
                         type: boolean
       tags:
-      - organizations
+      - Organizations
       requestBody:
         content:
           application/json:
@@ -443,6 +459,8 @@ paths:
                             title: Prs clinical cancer pdf report
                             type: boolean
         required: true
+      summary: Organizations models permissions create
+      x-summary-source: derived
   /organizations/{organization_id}/sftp_users:
     parameters:
     - name: organization_id
@@ -499,7 +517,9 @@ paths:
                       type: string
                       readOnly: true
       tags:
-      - organizations
+      - Organizations
+      summary: Organizations sftp users list
+      x-summary-source: derived
     post:
       operationId: organizations_sftp_users_create
       description: Create sftp user for organization
@@ -544,7 +564,7 @@ paths:
                     type: string
                     readOnly: true
       tags:
-      - organizations
+      - Organizations
       requestBody:
         content:
           application/json:
@@ -557,6 +577,8 @@ paths:
                   default: ''
                   minLength: 1
         required: true
+      summary: Organizations sftp users create
+      x-summary-source: derived
   /organizations/{organization_id}/sftp_users/{sftp_user_id}:
     parameters:
     - name: organization_id
@@ -593,7 +615,9 @@ paths:
         '200':
           description: Success
       tags:
-      - organizations
+      - Organizations
+      summary: Organizations sftp users delete
+      x-summary-source: derived
   /organizations/{organization_id}/sftp_users/{sftp_user_id}/ssh_keys:
     parameters:
     - name: organization_id
@@ -648,7 +672,7 @@ paths:
                     type: string
                     readOnly: true
       tags:
-      - organizations
+      - Organizations
       requestBody:
         content:
           application/json:
@@ -661,6 +685,8 @@ paths:
                   default: ''
                   minLength: 1
         required: true
+      summary: Organizations sftp users ssh keys create
+      x-summary-source: derived
   /organizations/{organization_id}/sftp_users/{sftp_user_id}/ssh_keys/{ssh_key_id}:
     parameters:
     - name: organization_id
@@ -720,7 +746,9 @@ paths:
                     type: string
                     readOnly: true
       tags:
-      - organizations
+      - Organizations
+      summary: Organizations sftp users ssh keys delete
+      x-summary-source: derived
   /organizations/{organization_id}/webhooks-info:
     parameters:
     - name: organization_id
@@ -787,7 +815,9 @@ paths:
                       format: date-time
                       readOnly: true
       tags:
-      - organizations
+      - Organizations
+      summary: Organizations webhooks info list
+      x-summary-source: derived
     post:
       operationId: organizations_webhooks-info_create
       description: Edit organization webhooks information
@@ -849,7 +879,7 @@ paths:
                       format: date-time
                       readOnly: true
       tags:
-      - organizations
+      - Organizations
       requestBody:
         content:
           application/json:
@@ -889,6 +919,8 @@ paths:
                     title: Save error in notifications
                     type: boolean
         required: true
+      summary: Organizations webhooks info create
+      x-summary-source: derived
   /organizations/{organization_id}/webhooks/{webhook_id}/test:
     parameters:
     - name: organization_id
@@ -927,7 +959,9 @@ paths:
         '202':
           description: Webhooks information
       tags:
-      - organizations
+      - Organizations
+      summary: Organizations webhooks test create
+      x-summary-source: derived
 components:
   securitySchemes:
     Bearer:

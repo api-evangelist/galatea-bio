@@ -7,7 +7,7 @@ servers:
 security:
 - Bearer: []
 tags:
-- name: exec
+- name: Exec
 paths:
   /exec/cancel:
     parameters: []
@@ -24,7 +24,7 @@ paths:
         '200':
           description: '{"detail": "Request to cancel execution id UUID accepted"}'
       tags:
-      - exec
+      - Exec
       requestBody:
         content:
           application/json:
@@ -36,6 +36,8 @@ paths:
                   type: string
               in: body
         required: true
+      summary: Exec cancel create
+      x-summary-source: derived
   /exec/model:
     parameters: []
     get:
@@ -193,7 +195,9 @@ paths:
                       title: Is sandbox
                       type: boolean
       tags:
-      - exec
+      - Exec
+      summary: Exec model list
+      x-summary-source: derived
     post:
       operationId: exec_model_create
       description: Create model
@@ -296,7 +300,7 @@ paths:
                     title: Is sandbox
                     type: boolean
       tags:
-      - exec
+      - Exec
       requestBody:
         content:
           application/json:
@@ -325,6 +329,8 @@ paths:
                   type: string
                   minLength: 1
         required: true
+      summary: Exec model create
+      x-summary-source: derived
   /exec/model/api:
     parameters: []
     get:
@@ -364,7 +370,9 @@ paths:
                         - string
                         - 'null'
       tags:
-      - exec
+      - Exec
+      summary: Exec model api list
+      x-summary-source: derived
   /exec/model/ecr:
     parameters: []
     get:
@@ -420,7 +428,9 @@ paths:
                       type: string
                       readOnly: true
       tags:
-      - exec
+      - Exec
+      summary: Exec model ecr list
+      x-summary-source: derived
     post:
       operationId: exec_model_ecr_create
       description: Update ECR images list
@@ -474,7 +484,9 @@ paths:
                       type: string
                       readOnly: true
       tags:
-      - exec
+      - Exec
+      summary: Exec model ecr create
+      x-summary-source: derived
   /exec/named_model:
     parameters: []
     get:
@@ -621,7 +633,9 @@ paths:
                       maxLength: 1000
                       minLength: 1
       tags:
-      - exec
+      - Exec
+      summary: Exec named model list
+      x-summary-source: derived
     post:
       operationId: exec_named_model_create
       description: Create named model
@@ -711,7 +725,7 @@ paths:
                     maxLength: 1000
                     minLength: 1
       tags:
-      - exec
+      - Exec
       requestBody:
         content:
           application/json:
@@ -789,6 +803,8 @@ paths:
                   title: Clinical validated
                   type: boolean
         required: true
+      summary: Exec named model create
+      x-summary-source: derived
   /exec/named_model/{named_model_id}:
     parameters:
     - name: named_model_id
@@ -885,7 +901,7 @@ paths:
                     maxLength: 1000
                     minLength: 1
       tags:
-      - exec
+      - Exec
       requestBody:
         content:
           application/json:
@@ -963,6 +979,8 @@ paths:
                   title: Clinical validated
                   type: boolean
         required: true
+      summary: Exec named model update
+      x-summary-source: derived
   /exec/named_model/{named_model_id}/history:
     parameters:
     - name: named_model_id
@@ -1067,7 +1085,9 @@ paths:
                       maxLength: 1000
                       minLength: 1
       tags:
-      - exec
+      - Exec
+      summary: Exec named model history list
+      x-summary-source: derived
   /exec/orders:
     parameters: []
     get:
@@ -1286,7 +1306,9 @@ paths:
                           title: Virtual
                           type: boolean
       tags:
-      - exec
+      - Exec
+      summary: Exec orders list
+      x-summary-source: derived
     post:
       operationId: exec_orders_create
       description: Submit model execution for source file
@@ -1304,7 +1326,7 @@ paths:
         '200':
           description: '[{"status": "Registered", "source_file_id": "uuid", "order_id": "uuid"}]'
       tags:
-      - exec
+      - Exec
       requestBody:
         content:
           application/json:
@@ -1340,6 +1362,8 @@ paths:
                     type: string
                     minLength: 1
         required: true
+      summary: Exec orders create
+      x-summary-source: derived
   /exec/orders/{order_id}:
     parameters:
     - name: order_id
@@ -1433,7 +1457,7 @@ paths:
                     title: Virtual
                     type: boolean
       tags:
-      - exec
+      - Exec
       requestBody:
         content:
           application/json:
@@ -1446,6 +1470,8 @@ paths:
                     type: string
                     format: uuid
         required: true
+      summary: Exec orders partial update
+      x-summary-source: derived
   /exec/tags:
     parameters: []
     get:
@@ -1519,7 +1545,9 @@ paths:
                           type: string
                           format: uuid
       tags:
-      - exec
+      - Exec
+      summary: Exec tags list
+      x-summary-source: derived
     post:
       operationId: exec_tags_create
       description: Create tag
@@ -1556,7 +1584,7 @@ paths:
                     type: string
                     format: uuid
       tags:
-      - exec
+      - Exec
       requestBody:
         content:
           application/json:
@@ -1570,6 +1598,8 @@ paths:
                   type: string
                   minLength: 1
         required: true
+      summary: Exec tags create
+      x-summary-source: derived
   /exec/tags/{tag_id}:
     parameters:
     - name: tag_id
@@ -1611,7 +1641,9 @@ paths:
                     type: string
                     format: uuid
       tags:
-      - exec
+      - Exec
+      summary: Exec tags read
+      x-summary-source: derived
     put:
       operationId: exec_tags_update
       description: Edit tag
@@ -1648,7 +1680,7 @@ paths:
                     type: string
                     format: uuid
       tags:
-      - exec
+      - Exec
       requestBody:
         content:
           application/json:
@@ -1662,6 +1694,8 @@ paths:
                   type: string
                   minLength: 1
         required: true
+      summary: Exec tags update
+      x-summary-source: derived
     delete:
       operationId: exec_tags_delete
       description: Delete tag
@@ -1675,7 +1709,9 @@ paths:
         '200':
           description: Success
       tags:
-      - exec
+      - Exec
+      summary: Exec tags delete
+      x-summary-source: derived
 components:
   securitySchemes:
     Bearer:

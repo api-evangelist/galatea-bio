@@ -7,7 +7,7 @@ servers:
 security:
 - Bearer: []
 tags:
-- name: credit
+- name: Credit
 paths:
   /credit/balance:
     parameters: []
@@ -91,7 +91,9 @@ paths:
                           format: date-time
                           readOnly: true
       tags:
-      - credit
+      - Credit
+      summary: Credit balance list
+      x-summary-source: derived
   /credit/exchange:
     parameters: []
     get:
@@ -256,7 +258,9 @@ paths:
                           format: date-time
                           readOnly: true
       tags:
-      - credit
+      - Credit
+      summary: Credit exchange list
+      x-summary-source: derived
     post:
       operationId: credit_exchange_create
       description: Create credit exchange
@@ -382,7 +386,7 @@ paths:
                     format: date-time
                     readOnly: true
       tags:
-      - credit
+      - Credit
       requestBody:
         content:
           application/json:
@@ -409,6 +413,8 @@ paths:
                   type: string
                   minLength: 1
         required: true
+      summary: Credit exchange create
+      x-summary-source: derived
   /credit/exchange/{credit_exchange_id}:
     parameters:
     - name: credit_exchange_id
@@ -548,7 +554,7 @@ paths:
                     format: date-time
                     readOnly: true
       tags:
-      - credit
+      - Credit
       requestBody:
         content:
           application/json:
@@ -570,6 +576,8 @@ paths:
                   type: string
                   minLength: 1
         required: true
+      summary: Credit exchange update
+      x-summary-source: derived
     delete:
       operationId: credit_exchange_delete
       description: Delete credit exchange
@@ -590,7 +598,9 @@ paths:
         '200':
           description: ok
       tags:
-      - credit
+      - Credit
+      summary: Credit exchange delete
+      x-summary-source: derived
   /credit/ledger:
     parameters: []
     get:
@@ -778,7 +788,9 @@ paths:
                           type: string
                           format: date-time
       tags:
-      - credit
+      - Credit
+      summary: Credit ledger list
+      x-summary-source: derived
   /credit/quickbooks_auth:
     parameters: []
     get:
@@ -788,7 +800,9 @@ paths:
         '200':
           description: ''
       tags:
-      - credit
+      - Credit
+      summary: Credit quickbooks auth list
+      x-summary-source: derived
   /credit/quickbooks_webhook:
     parameters: []
     post:
@@ -798,7 +812,9 @@ paths:
         '201':
           description: ''
       tags:
-      - credit
+      - Credit
+      summary: Credit quickbooks webhook create
+      x-summary-source: derived
   /credit/replenish:
     parameters: []
     post:
@@ -844,7 +860,7 @@ paths:
                     format: date-time
                     readOnly: true
       tags:
-      - credit
+      - Credit
       requestBody:
         content:
           application/json:
@@ -862,6 +878,8 @@ paths:
                   title: Amount
                   type: integer
         required: true
+      summary: Credit replenish create
+      x-summary-source: derived
   /credit/service:
     parameters: []
     get:
@@ -972,7 +990,9 @@ paths:
                           format: date-time
                           readOnly: true
       tags:
-      - credit
+      - Credit
+      summary: Credit service list
+      x-summary-source: derived
     post:
       operationId: credit_service_create
       description: Create credit service
@@ -1038,7 +1058,7 @@ paths:
                     format: date-time
                     readOnly: true
       tags:
-      - credit
+      - Credit
       requestBody:
         content:
           application/json:
@@ -1067,6 +1087,8 @@ paths:
                   - GENERATE_PDF_REPORT_PRS_CLINICAL_CARDIO
                   - GENERATE_PDF_REPORT_PRS_CLINICAL_CANCER
         required: true
+      summary: Credit service create
+      x-summary-source: derived
   /credit/service/{credit_service_id}:
     parameters:
     - name: credit_service_id
@@ -1094,7 +1116,9 @@ paths:
         '200':
           description: ok
       tags:
-      - credit
+      - Credit
+      summary: Credit service delete
+      x-summary-source: derived
   /credit/tariff:
     parameters: []
     get:
@@ -1267,7 +1291,9 @@ paths:
                           format: date-time
                           readOnly: true
       tags:
-      - credit
+      - Credit
+      summary: Credit tariff list
+      x-summary-source: derived
     post:
       operationId: credit_tariff_create
       description: Create credit tariff
@@ -1361,7 +1387,7 @@ paths:
                     format: date-time
                     readOnly: true
       tags:
-      - credit
+      - Credit
       requestBody:
         content:
           application/json:
@@ -1384,6 +1410,8 @@ paths:
                   title: Price
                   type: integer
         required: true
+      summary: Credit tariff create
+      x-summary-source: derived
   /credit/tariff/{credit_tariff_id}:
     parameters:
     - name: credit_tariff_id
@@ -1491,7 +1519,7 @@ paths:
                     format: date-time
                     readOnly: true
       tags:
-      - credit
+      - Credit
       requestBody:
         content:
           application/json:
@@ -1504,6 +1532,8 @@ paths:
                   title: Price
                   type: integer
         required: true
+      summary: Credit tariff update
+      x-summary-source: derived
     delete:
       operationId: credit_tariff_delete
       description: Delete credit tariff
@@ -1524,7 +1554,9 @@ paths:
         '200':
           description: ok
       tags:
-      - credit
+      - Credit
+      summary: Credit tariff delete
+      x-summary-source: derived
   /credit/template:
     parameters: []
     get:
@@ -1665,7 +1697,9 @@ paths:
                           format: date-time
                           readOnly: true
       tags:
-      - credit
+      - Credit
+      summary: Credit template list
+      x-summary-source: derived
   /credit/template/{credit_template_id}:
     parameters:
     - name: credit_template_id
@@ -1749,7 +1783,7 @@ paths:
                     format: date-time
                     readOnly: true
       tags:
-      - credit
+      - Credit
       requestBody:
         content:
           application/json:
@@ -1762,6 +1796,8 @@ paths:
                   title: Price
                   type: integer
         required: true
+      summary: Credit template update
+      x-summary-source: derived
   /credit/write_off:
     parameters: []
     post:
@@ -1807,7 +1843,7 @@ paths:
                     format: date-time
                     readOnly: true
       tags:
-      - credit
+      - Credit
       requestBody:
         content:
           application/json:
@@ -1825,6 +1861,8 @@ paths:
                   title: Amount
                   type: integer
         required: true
+      summary: Credit write off create
+      x-summary-source: derived
 components:
   securitySchemes:
     Bearer:

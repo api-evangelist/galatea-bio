@@ -7,7 +7,7 @@ servers:
 security:
 - Bearer: []
 tags:
-- name: dashboard
+- name: Dashboard
 paths:
   /dashboard/admix:
     parameters: []
@@ -169,7 +169,9 @@ paths:
                           type: string
                           minLength: 1
       tags:
-      - dashboard
+      - Dashboard
+      summary: Dashboard admix list
+      x-summary-source: derived
   /dashboard/donut:
     parameters: []
     get:
@@ -300,7 +302,9 @@ paths:
                           title: Value
                           type: number
       tags:
-      - dashboard
+      - Dashboard
+      summary: Dashboard donut list
+      x-summary-source: derived
   /dashboard/plot_request:
     parameters: []
     get:
@@ -410,7 +414,9 @@ paths:
                           type: string
                           readOnly: true
       tags:
-      - dashboard
+      - Dashboard
+      summary: Dashboard plot request list
+      x-summary-source: derived
   /dashboard/table_set:
     parameters: []
     get:
@@ -519,7 +525,9 @@ paths:
         '200':
           description: Paginated entity list
       tags:
-      - dashboard
+      - Dashboard
+      summary: Dashboard table set list
+      x-summary-source: derived
   /dashboard/table_set/export:
     parameters: []
     get:
@@ -628,7 +636,9 @@ paths:
         '200':
           description: Result file stream
       tags:
-      - dashboard
+      - Dashboard
+      summary: Dashboard table set export list
+      x-summary-source: derived
   /dashboard/table_superset:
     parameters: []
     get:
@@ -737,7 +747,9 @@ paths:
         '200':
           description: Paginated entity list
       tags:
-      - dashboard
+      - Dashboard
+      summary: Dashboard table superset list
+      x-summary-source: derived
   /dashboard/table_superset/export:
     parameters: []
     get:
@@ -846,7 +858,9 @@ paths:
         '200':
           description: Result file stream
       tags:
-      - dashboard
+      - Dashboard
+      summary: Dashboard table superset export list
+      x-summary-source: derived
 components:
   securitySchemes:
     Bearer:

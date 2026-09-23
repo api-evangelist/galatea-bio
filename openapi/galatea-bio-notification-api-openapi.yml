@@ -7,7 +7,7 @@ servers:
 security:
 - Bearer: []
 tags:
-- name: notification
+- name: Notification
 paths:
   /notification:
     parameters: []
@@ -108,7 +108,9 @@ paths:
                           title: Watched
                           type: boolean
       tags:
-      - notification
+      - Notification
+      summary: Notification list
+      x-summary-source: derived
   /notification/watch:
     parameters: []
     put:
@@ -137,7 +139,9 @@ paths:
         '200':
           description: ok
       tags:
-      - notification
+      - Notification
+      summary: Notification watch update
+      x-summary-source: derived
   /notification/webhook-actions:
     parameters: []
     get:
@@ -169,7 +173,9 @@ paths:
                       type: string
                       minLength: 1
       tags:
-      - notification
+      - Notification
+      summary: Notification webhook actions list
+      x-summary-source: derived
 components:
   securitySchemes:
     Bearer:

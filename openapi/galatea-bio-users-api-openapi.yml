@@ -7,7 +7,7 @@ servers:
 security:
 - Bearer: []
 tags:
-- name: users
+- name: Users
 paths:
   /users:
     parameters: []
@@ -122,7 +122,9 @@ paths:
                           type: string
                           readOnly: true
       tags:
-      - users
+      - Users
+      summary: Users list
+      x-summary-source: derived
     post:
       operationId: users_create
       description: Invite user
@@ -195,7 +197,7 @@ paths:
                     type: string
                     readOnly: true
       tags:
-      - users
+      - Users
       requestBody:
         content:
           application/json:
@@ -222,6 +224,8 @@ paths:
                   - OrgUser
                   - InternalService
         required: true
+      summary: Users create
+      x-summary-source: derived
   /users/activate:
     parameters: []
     post:
@@ -233,7 +237,7 @@ paths:
         '202':
           description: '{"detail": "Accepted"}'
       tags:
-      - users
+      - Users
       requestBody:
         content:
           application/json:
@@ -262,6 +266,8 @@ paths:
                   type: string
                   minLength: 1
         required: true
+      summary: Users activate create
+      x-summary-source: derived
   /users/change-password:
     parameters: []
     post:
@@ -275,7 +281,7 @@ paths:
         '202':
           description: '{"detail": "Accepted"}'
       tags:
-      - users
+      - Users
       requestBody:
         content:
           application/json:
@@ -294,6 +300,8 @@ paths:
                   type: string
                   minLength: 1
         required: true
+      summary: Users change password create
+      x-summary-source: derived
   /users/forgot-password:
     parameters: []
     post:
@@ -305,7 +313,7 @@ paths:
         '202':
           description: '{"detail": "Accepted"}'
       tags:
-      - users
+      - Users
       requestBody:
         content:
           application/json:
@@ -320,6 +328,8 @@ paths:
                   format: email
                   minLength: 1
         required: true
+      summary: Users forgot password create
+      x-summary-source: derived
   /users/me:
     parameters: []
     get:
@@ -445,7 +455,9 @@ paths:
                         type: string
                         readOnly: true
       tags:
-      - users
+      - Users
+      summary: Users me list
+      x-summary-source: derived
   /users/reset-password:
     parameters: []
     post:
@@ -457,7 +469,7 @@ paths:
         '202':
           description: '{"detail": "Accepted"}'
       tags:
-      - users
+      - Users
       requestBody:
         content:
           application/json:
@@ -476,6 +488,8 @@ paths:
                   type: string
                   minLength: 1
         required: true
+      summary: Users reset password create
+      x-summary-source: derived
   /users/{user_id}:
     parameters:
     - name: user_id
@@ -608,7 +622,9 @@ paths:
                         type: string
                         readOnly: true
       tags:
-      - users
+      - Users
+      summary: Users read
+      x-summary-source: derived
     put:
       operationId: users_update
       description: Edit user
@@ -745,7 +761,7 @@ paths:
                         type: string
                         readOnly: true
       tags:
-      - users
+      - Users
       requestBody:
         content:
           application/json:
@@ -773,6 +789,8 @@ paths:
                   - OrgUser
                   - InternalService
         required: true
+      summary: Users update
+      x-summary-source: derived
     delete:
       operationId: users_delete
       description: Delete user
@@ -788,7 +806,9 @@ paths:
         '200':
           description: '{"detail": "User deleted"}'
       tags:
-      - users
+      - Users
+      summary: Users delete
+      x-summary-source: derived
   /users/{user_id}/resend-invite:
     parameters:
     - name: user_id
@@ -809,7 +829,9 @@ paths:
         '200':
           description: OK
       tags:
-      - users
+      - Users
+      summary: Users resend invite create
+      x-summary-source: derived
 components:
   securitySchemes:
     Bearer:
