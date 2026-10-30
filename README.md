@@ -64,5 +64,134 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Galatea Bio is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+Galatea Bio is a Miami Lakes, Florida genomics company that operates a CLIA-CMS certified, CAP-accredited high-complexity clinical laboratory alongside the Biobank of the Americas, working to close the ancestry gap in genomic medicine by sequencing populations under-represented in existing reference panels. Its developer surface is the Octopod Ancestry API, a REST API at https://api.galatea.bio/api/v1 that lets clinical and research customers upload genomic source files (VCF) over HTTPS or SFTP, submit execution orders against named analysis models including the StrataRisk polygenic risk score, organize work with tags, receive HMAC-signed webhook deliveries when a file validates or an order completes, and download ancestry, PRS, JSON and PDF report results. The same API also exposes organization administration, SFTP user and SSH key management, credit/tariff accounting, dashboards and statistics.
+
+**Areas:** Genomics · Bioinformatics · Ancestry · Precision Medicine · polygenic-risk-score · Clinical Laboratory · Genetic Testing · Biobank · Life Sciences · Health · Sequencing
+
+## Galatea Bio on APIs.io
+
+Everything profiled for Galatea Bio is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/galatea-bio/](https://apis.io/providers/galatea-bio/)** — or go straight to one of the APIs or properties below.
+
+### APIs (10)
+
+- [Galatea Bio Auth API](https://apis.io/apis/galatea-bio/galatea-bio-auth-api/) — The auth API from Galatea Bio — 5 operation(s) for auth.
+- [Galatea Bio Credit API](https://apis.io/apis/galatea-bio/galatea-bio-credit-api/) — The credit API from Galatea Bio — 14 operation(s) for credit.
+- [Galatea Bio Dashboard API](https://apis.io/apis/galatea-bio/galatea-bio-dashboard-api/) — The dashboard API from Galatea Bio — 7 operation(s) for dashboard.
+- [Galatea Bio Data API](https://apis.io/apis/galatea-bio/galatea-bio-data-api/) — The data API from Galatea Bio — 12 operation(s) for data.
+- [Galatea Bio Exec API](https://apis.io/apis/galatea-bio/galatea-bio-exec-api/) — The exec API from Galatea Bio — 11 operation(s) for exec.
+- [Galatea Bio Internal API](https://apis.io/apis/galatea-bio/galatea-bio-internal-api/) — The internal API from Galatea Bio — 4 operation(s) for internal.
+- [Galatea Bio Notification API](https://apis.io/apis/galatea-bio/galatea-bio-notification-api/) — The notification API from Galatea Bio — 3 operation(s) for notification.
+- [Galatea Bio Organizations API](https://apis.io/apis/galatea-bio/galatea-bio-organizations-api/) — The organizations API from Galatea Bio — 13 operation(s) for organizations.
+- [Galatea Bio Statistics API](https://apis.io/apis/galatea-bio/galatea-bio-statistics-api/) — The statistics API from Galatea Bio — 2 operation(s) for statistics.
+- [Galatea Bio Users API](https://apis.io/apis/galatea-bio/galatea-bio-users-api/) — The users API from Galatea Bio — 8 operation(s) for users.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Galatea Bio Octopod Webhooks](https://apis.io/asyncapis/galatea-bio/galatea-bio-octopod-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [galatea-bio-mcp.yml](https://apis.io/servers/galatea-bio/galatea-bio-mcp-yml/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Galatea Bio Agentic Access](https://apis.io/agentic-access/galatea-bio/galatea-bio-agentic-access/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Galatea Bio Octopod Overlay](https://apis.io/overlays/galatea-bio/galatea-bio-octopod-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Galatea Bio Authentication](https://apis.io/security/galatea-bio/galatea-bio-authentication/)
+- [Galatea Bio Domain Security](https://apis.io/security/galatea-bio/galatea-bio-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Galatea Bio Plans Pricing](https://apis.io/plans/galatea-bio/galatea-bio-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Galatea Bio Rate Limits](https://apis.io/rate-limits/galatea-bio/galatea-bio-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://galatea.bio/)
+- [Documentation](https://docs.galatea.bio/)
+- [Getting started](https://docs.galatea.bio/#recipes-contents)
+- [API reference](https://docs.galatea.bio/#api-reference-contents)
+- [Compliance](https://galatea.bio/life-sciences)
+- [GitHub](https://github.com/GalateaBio)
+
+## API Evangelist rating
+
+**Kin Score 32.2** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 54.5 |
+| Contract governance | 18.2 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 35.1 |
+| Access clarity | 6.6 |
+
+**Agent readiness 32.1** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 17.2** — Health
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/galatea-bio/](https://apis.io/providers/galatea-bio/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Galatea Bio: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/galatea-bio/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
